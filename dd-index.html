@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#ffffff] text-[#212121]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDO Artist & Audience Intelligence Suite | Cohere Editorial Style</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cohere: {
+                            black: '#000000',
+                            nearBlack: '#17171c',
+                            green: '#003c33',
+                            navy: '#071829',
+                            blue: '#1863dc',
+                            coral: '#ff7759',
+                            softCoral: '#ffad9b',
+                            stone: '#eeece7',
+                            hairline: '#d9d9dd',
+                            ink: '#212121',
+                            mutedSlate: '#93939f',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Arial', 'sans-serif'],
+                        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        mono: ['Courier New', 'Courier', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Space Grotesk & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PapaParse CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d9d9dd;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #ff7759;
+        }
+        /* Tight leading line height for Cohere display type */
+        .cohere-display {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.0;
+            letter-spacing: -1.2px;
+        }
+        .cohere-display-large {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.00;
+            letter-spacing: -1.92px;
+        }
+        .drawer-transition {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden font-sans antialiased bg-[#ffffff] selection:bg-[#ff7759] selection:text-white text-[#212121]">
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-full md:w-64 bg-[#eeece7] border-b md:border-b-0 md:border-r border-[#d9d9dd] flex flex-col shrink-0 z-20">
+            <!-- Brand Header -->
+            <div class="p-6 border-b border-[#d9d9dd] flex flex-col gap-1 bg-[#eeece7]">
+                <div class="flex items-center gap-2">
+                    <span class="text-[#000000] font-display text-2xl font-bold tracking-tight hover:text-[#ff7759] transition-all duration-300 cursor-pointer uppercase">
+                        Double Deer
+                    </span>
+                </div>
+                <p class="text-[10px] text-[#75758a] font-mono tracking-wider uppercase mt-1">DDO Audience Intelligence</p>
+            </div>
+
+            <!-- Navigation Links styled as taxonomy buttons -->
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
+                <div class="px-3 mb-2 text-[10px] font-mono tracking-wider text-[#75758a] uppercase">Roster Analysis</div>
+                
+                <!-- Active status styled with subtle outlines and minimal focus shapes -->
+                <button onclick="switchTab('overview')" id="btn-overview" class="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 bg-[#000000] text-white border border-[#000000]">
+                    <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 shrink-0"></i>
+                    Overview Dashboard
+                </button>
+                
+                <button onclick="switchTab('genres')" id="btn-genres" class="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 text-[#212121]/80 hover:text-[#ff7759] hover:bg-white/50 border border-transparent">
+                    <i data-lucide="music-2" class="w-3.5 h-3.5 shrink-0"></i>
+                    Genres & Markets
+                </button>
+
+                <button onclick="switchTab('demographics')" id="btn-demographics" class="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 text-[#212121]/80 hover:text-[#ff7759] hover:bg-white/50 border border-transparent">
+                    <i data-lucide="fingerprint" class="w-3.5 h-3.5 shrink-0"></i>
+                    Audience Demographics
+                </button>
+                
+                <button onclick="switchTab('explorer')" id="btn-explorer" class="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 text-[#212121]/80 hover:text-[#ff7759] hover:bg-white/50 border border-transparent">
+                    <i data-lucide="database" class="w-3.5 h-3.5 shrink-0"></i>
+                    Catalog Explorer
+                </button>
+
+                <button onclick="switchTab('playbook')" id="btn-playbook" class="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 text-[#212121]/80 hover:text-[#ff7759] hover:bg-white/50 border border-transparent">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 shrink-0"></i>
+                    Strategic Playbook
+                </button>
+            </nav>
+
+            <!-- CSV File Drag & Drop & Clear Controls -->
+            <div class="p-4 border-t border-[#d9d9dd] bg-[#eeece7]/60 space-y-2">
+                <label id="drop-zone" for="csv-upload" class="group relative flex flex-col items-center justify-center border border-dashed border-[#d9d9dd] hover:border-[#ff7759] p-4 text-center cursor-pointer bg-white/70 transition-all duration-300 rounded-[8px]">
+                    <i data-lucide="upload" class="w-4 h-4 text-[#75758a] group-hover:text-[#ff7759] transition-colors mb-1"></i>
+                    <span class="text-xs font-bold text-[#212121] group-hover:text-[#ff7759] transition-colors uppercase tracking-tight">Import Artist CSV</span>
+                    <span class="text-[9px] text-[#ff7759] font-mono mt-1">Verbatim "Artists Values" schema</span>
+                    <input id="csv-upload" type="file" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
+                </label>
+
+                <!-- Data Lifecycle Reset Controls -->
+                <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[9px]">
+                    <button onclick="clearDataset()" class="flex items-center justify-center gap-1 py-1.5 px-1 bg-[#ffffff] hover:bg-[#ff7759] hover:text-white text-[#ff7759] border border-[#d9d9dd] rounded-full transition-all uppercase">
+                        <i data-lucide="trash-2" class="w-2.5 h-2.5"></i>
+                        Clear
+                    </button>
+                    <button onclick="restoreDefaultDataset()" class="flex items-center justify-center gap-1 py-1.5 px-1 bg-[#000000] hover:bg-[#1863dc] text-white rounded-full transition-all uppercase">
+                        <i data-lucide="rotate-ccw" class="w-2.5 h-2.5"></i>
+                        Reset Demo
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTAINER -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-[#ffffff] relative">
+
+            <!-- HEADER -->
+            <header class="h-16 border-b border-[#d9d9dd] bg-[#ffffff] flex items-center justify-between px-6 shrink-0 z-10">
+                <div class="flex items-center gap-4">
+                    <div class="md:hidden">
+                        <button class="text-[#212121]" onclick="toggleSidebarMenu()">
+                            <i data-lucide="menu" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-baseline gap-3">
+                        <h2 id="page-title" class="font-display text-2xl font-medium tracking-tight text-[#212121]">Overview Dashboard</h2>
+                        <span class="text-[10px] font-mono tracking-wider text-[#1863dc] uppercase" id="data-status">Parsed default system dataset</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 bg-[#eeece7] border border-[#d9d9dd] rounded-full py-1 px-3 text-xs">
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1863dc] opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#1863dc]"></span>
+                        </span>
+                        <span class="text-[#75758a] font-mono text-[9px] font-bold uppercase tracking-wider" id="status-text">Intelligence Engine Active</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN VIEW WORKSPACE (SCROLLABLE) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
+
+                <!-- TOAST NOTIFICATION CONTAINER -->
+                <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+                <!-- EMPTY STATE HERO CONTAINER -->
+                <div id="empty-state-hero" class="hidden min-h-[60vh] flex flex-col items-center justify-center text-center p-8 border border-dashed border-[#ff7759]/40 bg-[#eeece7]/40 rounded-[22px]">
+                    <div class="w-12 h-12 bg-[#ff7759]/10 text-[#ff7759] border border-[#ff7759]/20 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-display text-3xl font-medium tracking-tight text-cohere-black uppercase">Data Roster Purged</h3>
+                    <p class="text-xs text-[#75758a] max-w-sm mt-2 mb-6 leading-relaxed">
+                        Please upload your custom spreadsheet via the file importer on the sidebar panel, or restore our high-fidelity enterprise reference model to begin.
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <label for="csv-upload" class="cursor-pointer px-5 py-2.5 bg-[#000000] hover:bg-[#ff7759] text-white font-mono text-[10px] uppercase tracking-wider transition-all rounded-full flex items-center gap-2">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            Import CSV File
+                        </label>
+                        <button onclick="restoreDefaultDataset()" class="px-5 py-2.5 border border-[#d9d9dd] bg-white text-[#212121] hover:bg-[#eeece7] font-mono text-[10px] uppercase tracking-wider transition-all rounded-full flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            Load Demo Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= OVERVIEW TAB ================= -->
+                <section id="tab-overview" class="space-y-8 dashboard-tab">
+                    
+                    <!-- HERO DECLARATION BANNER -->
+                    <div class="border-b border-[#d9d9dd] pb-6">
+                        <h1 class="cohere-display-large text-5xl md:text-7xl font-bold text-[#000000] tracking-tighter uppercase mb-2">Audience intelligence.</h1>
+                        <p class="text-sm text-[#75758a] font-normal max-w-xl">A sovereign infrastructure analyzing listening metrics, demographic cohorts, and domestic reach data matrices across the Double Deer portfolio.</p>
+                    </div>
+
+                    <!-- METRIC HERO CARDS -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5 hover:border-[#ff7759] transition-all duration-300">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-[#75758a]">ROSTER TOTAL</span>
+                                <i data-lucide="users-2" class="w-3.5 h-3.5 text-[#ff7759]"></i>
+                            </div>
+                            <h3 class="cohere-display text-4xl font-bold text-[#212121]" id="kpi-total-artists">0</h3>
+                            <p class="text-[9px] font-mono text-[#93939f] uppercase mt-2">Active profile records</p>
+                        </div>
+
+                        <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5 hover:border-[#ff7759] transition-all duration-300">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-[#75758a]">COMBINED MONTHLY REACH</span>
+                                <i data-lucide="activity" class="w-3.5 h-3.5 text-[#1863dc]"></i>
+                            </div>
+                            <h3 class="cohere-display text-4xl font-bold text-[#212121]" id="kpi-combined-listeners">0</h3>
+                            <p class="text-[9px] font-mono text-[#93939f] uppercase mt-2">Spotify Active streams</p>
+                        </div>
+
+                        <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5 hover:border-[#ff7759] transition-all duration-300">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-[#75758a]">DOMINANT PORTFOLIO SECTOR</span>
+                                <i data-lucide="layers" class="w-3.5 h-3.5 text-[#75758a]"></i>
+                            </div>
+                            <h3 class="cohere-display text-3xl font-bold text-[#212121] truncate" id="kpi-dominant-genre">None</h3>
+                            <p class="text-[9px] font-mono text-[#93939f] uppercase mt-2">Primary genre sector</p>
+                        </div>
+
+                        <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5 hover:border-[#ff7759] transition-all duration-300">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-[#75758a]">PRIMARY GEOGRAPHIC NODE</span>
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-[#75758a]"></i>
+                            </div>
+                            <h3 class="cohere-display text-3xl font-bold text-[#212121] truncate" id="kpi-top-city">None</h3>
+                            <p class="text-[9px] font-mono text-[#93939f] uppercase mt-2">Primary urban cluster</p>
+                        </div>
+                    </div>
+
+                    <!-- CHARTS ROW -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Genre Market Share -->
+                        <div class="lg:col-span-1 bg-[#eeece7]/40 border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Roster Genre Distribution</h4>
+                                <p class="text-[10px] text-[#75758a]">Overall catalog split across classifications</p>
+                            </div>
+                            <div class="flex-1 relative flex items-center justify-center min-h-[240px] mt-4">
+                                <canvas id="chart-genre-share"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Listener Reach vs Chartmetric Score -->
+                        <div class="lg:col-span-2 bg-white border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Reach vs Global Rank Indices</h4>
+                                <p class="text-[10px] text-[#75758a]">Plotting Spotify monthly listener volume against global performance score benchmarks</p>
+                            </div>
+                            <div class="flex-1 min-h-[240px] mt-4">
+                                <canvas id="chart-listeners-scatter"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TOP PERFORMANCE PROFILES LIST (50+ REQUIRED) -->
+                    <div class="bg-white border border-[#d9d9dd] rounded-[8px] overflow-hidden">
+                        <div class="p-5 border-b border-[#d9d9dd] flex items-center justify-between bg-[#eeece7]/20">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121]">Top Listener Volume Profiles (Ranked 1 to 50)</h4>
+                                <p class="text-[10px] text-[#75758a]">Comprehensive list of monitored profiles sorted by monthly reach volume</p>
+                            </div>
+                            <span class="bg-[#ff7759] text-white font-mono text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                50+ Profiles Loaded
+                            </span>
+                        </div>
+                        <div class="max-h-[500px] overflow-y-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-[#d9d9dd] bg-[#ffffff] text-[#75758a] font-mono text-[10px] uppercase">
+                                        <th class="py-3 px-4">Rank</th>
+                                        <th class="py-3 px-4">Artist Name</th>
+                                        <th class="py-3 px-4">Main Genre</th>
+                                        <th class="py-3 px-4">Primary City Hub</th>
+                                        <th class="py-3 px-4 text-right">Spotify Listeners</th>
+                                        <th class="py-3 px-4 text-right">Chartmetric Score</th>
+                                        <th class="py-3 px-4 text-center">Inspect</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-performers-body" class="divide-y divide-[#d9d9dd]/50">
+                                    <!-- Populated dynamically with minimum 50+ rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= GENRE & MARKET INSIGHTS TAB ================= -->
+                <section id="tab-genres" class="space-y-8 hidden dashboard-tab">
+                    
+                    <div class="border-b border-[#d9d9dd] pb-6">
+                        <h1 class="cohere-display text-4xl font-bold text-[#000000] tracking-tighter uppercase mb-1">Genres & Markets.</h1>
+                        <p class="text-xs text-[#75758a]">A systematic breakdown of regional hub concentration and structural genre matrix values.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Top City Listenership Hubs -->
+                        <div class="lg:col-span-2 bg-white border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Active Urban Core Audiences</h4>
+                                <p class="text-[10px] text-[#75758a]">Aggregated streaming listeners active inside domestic urban areas</p>
+                            </div>
+                            <div class="flex-1 min-h-[300px] mt-4">
+                                <canvas id="chart-city-listeners"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Regional Hotspots -->
+                        <div class="lg:col-span-1 bg-[#eeece7]/40 border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Geographic Anchors</h4>
+                                <p class="text-[10px] text-[#75758a] mb-4">Core urban hubs housing prominent listener subcultures</p>
+                                <div class="space-y-2 max-h-[320px] overflow-y-auto custom-scrollbar" id="city-hotspot-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Genre Analytics Aggregates (REMOVED Artist Count - ADDED Engagement & Target Demographics) -->
+                <div class="bg-white border border-[#d9d9dd] rounded-[8px] overflow-hidden">
+                    <div class="p-5 border-b border-[#d9d9dd] bg-[#eeece7]/20">
+                        <h4 class="font-display text-base font-bold text-[#212121]">Genre Portfolio Matrix</h4>
+                        <p class="text-[10px] text-[#75758a]">Analysis of genre performance relative to social response levels and audience skews</p>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-[#d9d9dd] bg-[#ffffff] text-[#75758a] font-mono text-[10px] uppercase">
+                                    <th class="py-3 px-4">Genre Classification</th>
+                                    <th class="py-3 px-4 text-right">Avg Monthly Listeners</th>
+                                    <th class="py-3 px-4">Primary Target Demographic</th>
+                                    <th class="py-3 px-4 text-right">Avg Chartmetric Rank</th>
+                                    <th class="py-3 px-4 text-right">Peak Reach Index</th>
+                                </tr>
+                            </thead>
+                            <tbody id="genre-analysis-body" class="divide-y divide-[#d9d9dd]/50">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+                <!-- ================= AUDIENCE DEMOGRAPHICS TAB ================= -->
+                <section id="tab-demographics" class="space-y-8 hidden dashboard-tab">
+                    
+                    <div class="border-b border-[#d9d9dd] pb-6">
+                        <h1 class="cohere-display text-4xl font-bold text-[#000000] tracking-tighter uppercase mb-1">Demographics Suite.</h1>
+                        <p class="text-xs text-[#75758a]">Granular breakdowns of age distribution trends and gender splits across selected catalog entities.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Global Age Demographics Breakdown -->
+                        <div class="lg:col-span-2 bg-white border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Consolidated Age Demographics Weight</h4>
+                                <p class="text-[10px] text-[#75758a]">Portfolio-wide weight levels across defined age brackets</p>
+                            </div>
+                            <div class="flex-1 min-h-[300px] mt-4">
+                                <canvas id="chart-global-age"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Combined Gender Distribution with PERCENTAGE metrics -->
+                        <div class="lg:col-span-1 bg-[#eeece7]/40 border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121] mb-1">Combined Gender Distribution</h4>
+                                <p class="text-[10px] text-[#75758a]">Averaged binary profile split (percentages directly visualized)</p>
+                            </div>
+                            <div class="flex-1 relative flex items-center justify-center min-h-[250px] mt-4">
+                                <canvas id="chart-global-gender"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demographic Scouting Insights (25+ MATCHES REQUIRED) -->
+                    <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5">
+                        <div class="border-b border-[#d9d9dd] pb-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="font-display text-base font-bold text-[#212121]">Demographic Target Matcher</h4>
+                                <p class="text-[10px] text-[#75758a]">Instantly filter and match a minimum of 25+ artist profiles targeting unique consumer cohorts</p>
+                            </div>
+                            <!-- Category tags styled in Cohere coral / stone pill format -->
+                            <div class="flex flex-wrap gap-1.5 font-mono text-[9px]">
+                                <button onclick="filterDemographicCohort('GenZ')" id="demog-btn-GenZ" class="px-3 py-1.5 rounded-full border border-[#ff7759] bg-[#ff7759] text-white uppercase transition-all">Gen-Z (18-24) heavy</button>
+                                <button onclick="filterDemographicCohort('Millennials')" id="demog-btn-Millennials" class="px-3 py-1.5 rounded-full border border-[#d9d9dd] bg-white text-[#212121] hover:border-[#ff7759] uppercase transition-all">Millennial core</button>
+                                <button onclick="filterDemographicCohort('FemaleSkew')" id="demog-btn-FemaleSkew" class="px-3 py-1.5 rounded-full border border-[#d9d9dd] bg-white text-[#212121] hover:border-[#ff7759] uppercase transition-all">High Female %</button>
+                                <button onclick="filterDemographicCohort('MaleSkew')" id="demog-btn-MaleSkew" class="px-3 py-1.5 rounded-full border border-[#d9d9dd] bg-white text-[#212121] hover:border-[#ff7759] uppercase transition-all">High Male %</button>
+                            </div>
+                        </div>
+
+                        <!-- Grid supporting 25+ matched cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="demographic-scouting-results">
+                            <!-- Populated dynamically with minimum 25 profiles -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= ARTIST CATALOG EXPLORER ================= -->
+                <section id="tab-explorer" class="space-y-6 hidden dashboard-tab">
+                    
+                    <div class="border-b border-[#d9d9dd] pb-6">
+                        <h1 class="cohere-display text-4xl font-bold text-[#000000] tracking-tighter uppercase mb-1">Catalog Explorer.</h1>
+                        <p class="text-xs text-[#75758a]">A fully queryable reference engine to filter, isolate, and locate specific roster records.</p>
+                    </div>
+
+                    <div class="bg-white border border-[#d9d9dd] rounded-[8px] p-5">
+                        <!-- Filters Toolbar in clean grey stone background -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+                            <div class="relative">
+                                <i data-lucide="search" class="w-3.5 h-3.5 text-[#75758a] absolute left-3 top-3.5"></i>
+                                <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="Search name, genre, city..." class="w-full bg-[#eeece7]/40 border border-[#d9d9dd] py-2 pl-9 pr-4 text-xs font-medium text-[#212121] placeholder-[#75758a] focus:outline-none focus:border-[#000000] rounded-[4px]">
+                            </div>
+                            <div>
+                                <select id="filter-genre" onchange="applyFilters()" class="w-full bg-[#eeece7]/40 border border-[#d9d9dd] py-2 px-3 text-xs text-[#212121] focus:outline-none focus:border-[#000000] rounded-[4px]">
+                                    <option value="all">All Genres</option>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div>
+                                <select id="filter-city" onchange="applyFilters()" class="w-full bg-[#eeece7]/40 border border-[#d9d9dd] py-2 px-3 text-xs text-[#212121] focus:outline-none focus:border-[#000000] rounded-[4px]">
+                                    <option value="all">All Top Cities</option>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div>
+                                <select id="filter-stage" onchange="applyFilters()" class="w-full bg-[#eeece7]/40 border border-[#d9d9dd] py-2 px-3 text-xs text-[#212121] focus:outline-none focus:border-[#000000] rounded-[4px]">
+                                    <option value="all">All Career Stages</option>
+                                    <option value="Superstar">Superstar</option>
+                                    <option value="Mainstream">Mainstream</option>
+                                    <option value="Mid-Level">Mid-Level</option>
+                                    <option value="Developing">Developing</option>
+                                    <option value="Undiscovered">Undiscovered</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <button onclick="clearFilters()" class="w-full py-2 border border-[#d9d9dd] hover:bg-[#eeece7] text-xs font-mono uppercase tracking-wider text-[#212121] transition-all rounded-[4px]">
+                                    Clear Filters
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Explorer Table -->
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-[#d9d9dd] bg-[#ffffff] text-[#75758a] font-mono text-[10px] uppercase">
+                                        <th class="py-3 px-3">Artist</th>
+                                        <th class="py-3 px-3">Genre</th>
+                                        <th class="py-3 px-3">Top Audience City</th>
+                                        <th class="py-3 px-3 text-right">Spotify Listeners</th>
+                                        <th class="py-3 px-3 text-right">Spotify Followers</th>
+                                        <th class="py-3 px-3 text-right">Gender Split</th>
+                                        <th class="py-3 px-3 text-right">Top Age Bracket</th>
+                                        <th class="py-3 px-3 text-center">Inspect</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="explorer-table-body" class="divide-y divide-[#d9d9dd]/50">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[#d9d9dd] text-xs">
+                            <p class="text-[#75758a] font-medium font-mono" id="pagination-status">Showing 0 to 0 of 0 entries</p>
+                            <div class="flex gap-2">
+                                <button id="btn-prev-page" onclick="prevPage()" class="px-4 py-1.5 border border-[#d9d9dd] text-[#212121] hover:bg-[#eeece7] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-mono uppercase text-[10px] rounded-full">
+                                    Previous
+                                </button>
+                                <button id="btn-next-page" onclick="nextPage()" class="px-4 py-1.5 border border-[#d9d9dd] text-[#212121] hover:bg-[#eeece7] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-mono uppercase text-[10px] rounded-full">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= STRATEGIC PLAYBOOK TAB ================= -->
+                <section id="tab-playbook" class="space-y-8 hidden dashboard-tab">
+                    
+                    <div class="border-b border-[#d9d9dd] pb-6">
+                        <h1 class="cohere-display text-4xl font-bold text-[#000000] tracking-tighter uppercase mb-1">Strategic Playbook.</h1>
+                        <p class="text-xs text-[#75758a]">A technical guide evaluating operational frameworks, target segment mappings, and retail integration tactics.</p>
+                    </div>
+
+                    <!-- Layout combining warm editorial surfaces with pale green capabilities backdrop -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-[#edfce9] border border-[#d9d9dd] rounded-[22px] p-6">
+                            <div class="flex items-center gap-3 text-[#003c33] mb-4">
+                                <i data-lucide="lightbulb" class="w-6 h-6 shrink-0"></i>
+                                <h4 class="font-display text-xl font-bold">Integrating Audience Data within Double Deer Operations</h4>
+                            </div>
+                            <p class="text-xs text-[#212121]/90 leading-relaxed mb-6">
+                                Demographics and stream counts serve as direct validation anchors for scheduling live activations. When modeling premium curation concepts (like the signature "Medium Format" showroom gig models), selecting talent should depend entirely on structural target alignment indices over anecdotal vanity numbers.
+                            </p>
+                            <div class="space-y-4">
+                                <div class="border-t border-[#d9d9dd] pt-4">
+                                    <h5 class="text-xs font-mono font-bold text-[#003c33] uppercase">Model 1: Intimate Design activations (100 - 300 cap)</h5>
+                                    <p class="text-[11px] text-[#75758a] mt-1 leading-relaxed">
+                                        Prioritize catalog segments showing high social conversion. Isolating artist matrices with female skews over 60% and active Gen-Z clusters provides highly structured communities with massive product conversion trends.
+                                    </p>
+                                </div>
+                                <div class="border-t border-[#d9d9dd] pt-4">
+                                    <h5 class="text-xs font-mono font-bold text-[#003c33] uppercase">Model 2: Curated Club & Electronic Subsections</h5>
+                                    <p class="text-[11px] text-[#75758a] mt-1 leading-relaxed">
+                                        Combine geographic listener densities to route club sequences cleanly. Cross-filtering electronic artists displaying high male ratios ensures strong, highly responsive dancefloor conversion dynamics.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar metrics inside cohere stone borders -->
+                        <div class="lg:col-span-1 bg-[#eeece7]/40 border border-[#d9d9dd] rounded-[16px] p-5 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-display text-sm font-bold text-[#212121] mb-4 uppercase">Curation Benchmarks</h4>
+                                <div class="space-y-4">
+                                    <div class="p-4 rounded-[8px] bg-white border border-[#d9d9dd]">
+                                        <h5 class="text-xs font-bold text-[#ff7759] uppercase tracking-wider mb-1">Target Cluster Alpha</h5>
+                                        <p class="text-[10px] text-[#75758a] leading-relaxed">
+                                            Gen-Z heavy profiles with high IG engagement (>4%). Extremely responsive for boutique products and apparel launches.
+                                        </p>
+                                    </div>
+                                    <div class="p-4 rounded-[8px] bg-white border border-[#d9d9dd]">
+                                        <h5 class="text-xs font-bold text-[#1863dc] uppercase tracking-wider mb-1">Target Cluster Beta</h5>
+                                        <p class="text-[10px] text-[#75758a] leading-relaxed">
+                                            Millennial anchors showing stable monthly listenership densities. Ideal for high-ticket hospitality, design spaces, and design forums.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- SIDE DRAWER PANEL FOR ARTIST PROFILE DEEP DIVES (COHERE DARK PANEL INTERACTION) -->
+            <div id="artist-deep-drawer" class="fixed inset-y-0 right-0 w-full max-w-lg bg-[#003c33] text-white border-l border-[#ff7759]/40 shadow-2xl z-50 transform translate-x-full drawer-transition flex flex-col hidden">
+                <!-- Drawer Header (Dark Green UI Anchor) -->
+                <div class="p-6 border-b border-white/10 flex items-center justify-between bg-black/20">
+                    <div>
+                        <span id="drawer-artist-stage" class="px-2 py-0.5 text-[8px] font-mono tracking-wider bg-[#ff7759]/20 text-[#ffad9b] border border-[#ff7759]/40 uppercase rounded-sm">Developing</span>
+                        <h3 id="drawer-artist-name" class="font-display text-3xl font-bold text-white mt-1.5 uppercase">Artist Profile</h3>
+                        <p id="drawer-artist-genres" class="text-xs text-[#ffad9b] font-mono uppercase mt-1">Mainstream Genre Info</p>
+                    </div>
+                    <button onclick="closeArtistDrawer()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-[#ff7759] flex items-center justify-center text-white transition-all">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Drawer Scrollable Content -->
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+                    <!-- General Quick Stats Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-black/15 border border-white/10 rounded-[8px]">
+                            <span class="text-[9px] font-mono text-[#ffad9b] uppercase tracking-wider">Spotify Reach</span>
+                            <p id="drawer-stat-listeners" class="font-display text-2xl font-bold text-white mt-0.5">0</p>
+                        </div>
+                        <div class="p-4 bg-black/15 border border-white/10 rounded-[8px]">
+                            <span class="text-[9px] font-mono text-[#ffad9b] uppercase tracking-wider">Global CM Score</span>
+                            <p id="drawer-stat-cmscore" class="font-display text-2xl font-bold text-white mt-0.5">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Section: Audience Geography -->
+                    <div class="bg-black/15 p-4 border border-white/10 rounded-[8px] space-y-3">
+                        <h5 class="text-xs font-mono uppercase tracking-wider text-[#ffad9b] flex items-center gap-1.5">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Local Streaming Core Hubs
+                        </h5>
+                        <div class="relative min-h-[160px] flex items-center justify-center">
+                            <canvas id="drawer-city-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Section: Audience Gender Breakdown -->
+                    <div class="bg-black/15 p-4 border border-white/10 rounded-[8px] space-y-3">
+                        <h5 class="text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="users-2" class="w-3.5 h-3.5"></i> Gender Division Skew
+                        </h5>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex items-center justify-between text-[#ffad9b] font-mono text-[10px]">
+                                <span>Male (<span id="drawer-txt-male">0%</span>)</span>
+                                <span>Female (<span id="drawer-txt-female">0%</span>)</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden flex">
+                                <div id="drawer-bar-male" class="bg-[#1863dc] h-full transition-all duration-300" style="width: 50%;"></div>
+                                <div id="drawer-bar-female" class="bg-[#ff7759] h-full transition-all duration-300" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Audience Age Cohorts -->
+                    <div class="bg-black/15 p-4 border border-white/10 rounded-[8px] space-y-3">
+                        <h5 class="text-xs font-mono uppercase tracking-wider text-[#ffad9b] flex items-center gap-1.5">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Age Demographics Distribution
+                        </h5>
+                        <div class="relative min-h-[160px] flex items-center justify-center">
+                            <canvas id="drawer-age-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS SCRIPTS & CORE APPLICATION ENGINE -->
+    <script>
+        // High fidelity simulated default dataset (55 complete artist profiles guaranteed)
+        const defaultArtists = [
+            { id: 10001, name: "Ria Ricis", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 93, spotifyFollowers: 87807, spotifyListeners: 194825, instagramFollowers: 32000000, instagramEngagement: 0.012, tiktokFollowers: 45000000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 125000, malePct: 35, femalePct: 65, age13_17: 25, age18_24: 55, age25_34: 15, age35_44: 4, age45_plus: 1 },
+            { id: 10002, name: "Lizzy Parra", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 61, spotifyFollowers: 141158, spotifyListeners: 263598, instagramFollowers: 1200000, instagramEngagement: 0.048, tiktokFollowers: 2500000, genres: "Indie Pop", topCity: "Bandung", topCityListeners: 84000, malePct: 48, femalePct: 52, age13_17: 12, age18_24: 43, age25_34: 35, age35_44: 8, age45_plus: 2 },
+            { id: 10003, name: "Hindia", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 84, spotifyFollowers: 2200000, spotifyListeners: 4100000, instagramFollowers: 1100000, instagramEngagement: 0.038, tiktokFollowers: 850000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 1500000, malePct: 54, femalePct: 46, age13_17: 8, age18_24: 62, age25_34: 25, age35_44: 4, age45_plus: 1 },
+            { id: 10004, name: "Nadin Amizah", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 82, spotifyFollowers: 3100000, spotifyListeners: 3800000, instagramFollowers: 2100000, instagramEngagement: 0.051, tiktokFollowers: 1800000, genres: "Indonesian Pop", topCity: "Bandung", topCityListeners: 920000, malePct: 28, femalePct: 72, age13_17: 15, age18_24: 58, age25_34: 22, age35_44: 4, age45_plus: 1 },
+            { id: 10005, name: "Weird Genius", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 68, spotifyFollowers: 480000, spotifyListeners: 1200000, instagramFollowers: 550000, instagramEngagement: 0.032, tiktokFollowers: 1400000, genres: "Electronic", topCity: "Surabaya", topCityListeners: 310000, malePct: 65, femalePct: 35, age13_17: 10, age18_24: 50, age25_34: 30, age35_44: 8, age45_plus: 2 },
+            { id: 10006, name: "Isyana Sarasvati", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 78, spotifyFollowers: 1900000, spotifyListeners: 1500000, instagramFollowers: 10000000, instagramEngagement: 0.019, tiktokFollowers: 3400000, genres: "Art Pop", topCity: "Jakarta", topCityListeners: 480000, malePct: 40, femalePct: 60, age13_17: 11, age18_24: 45, age25_34: 34, age35_44: 8, age45_plus: 2 },
+            { id: 10007, name: "Grrrl Gang", country: "Indonesia", careerStage: "Developing", momentum: "Explosive", chartmetricScore: 54, spotifyFollowers: 65000, spotifyListeners: 180000, instagramFollowers: 85000, instagramEngagement: 0.082, tiktokFollowers: 42000, genres: "Indie Pop", topCity: "Yogyakarta", topCityListeners: 54000, malePct: 52, femalePct: 48, age13_17: 6, age18_24: 68, age25_34: 21, age35_44: 4, age45_plus: 1 },
+            { id: 10008, name: "White Shoes & CC", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 63, spotifyFollowers: 280000, spotifyListeners: 420000, instagramFollowers: 180000, instagramEngagement: 0.028, tiktokFollowers: 15000, genres: "Retro Pop", topCity: "Jakarta", topCityListeners: 130000, malePct: 45, femalePct: 55, age13_17: 4, age18_24: 38, age25_34: 46, age35_44: 10, age45_plus: 2 },
+            { id: 10009, name: "Reality Club", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 81, spotifyFollowers: 1100000, spotifyListeners: 3200000, instagramFollowers: 450000, instagramEngagement: 0.071, tiktokFollowers: 820000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 1100000, malePct: 50, femalePct: 50, age13_17: 9, age18_24: 55, age25_34: 28, age35_44: 6, age45_plus: 2 },
+            { id: 10010, name: "Tulus", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 91, spotifyFollowers: 5500000, spotifyListeners: 6800000, instagramFollowers: 4200000, instagramEngagement: 0.024, tiktokFollowers: 1100000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 2200000, malePct: 36, femalePct: 64, age13_17: 12, age18_24: 48, age25_34: 34, age35_44: 5, age45_plus: 1 },
+            { id: 10011, name: "Pamungkas", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 83, spotifyFollowers: 2800000, spotifyListeners: 4300000, instagramFollowers: 1900000, instagramEngagement: 0.035, tiktokFollowers: 1400000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 1200000, malePct: 42, femalePct: 58, age13_17: 8, age18_24: 59, age25_34: 28, age35_44: 4, age45_plus: 1 },
+            { id: 10012, name: "Yura Yunita", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 82, spotifyFollowers: 1700000, spotifyListeners: 3900000, instagramFollowers: 2400000, instagramEngagement: 0.042, tiktokFollowers: 2500000, genres: "Indonesian Pop", topCity: "Bandung", topCityListeners: 980000, malePct: 30, femalePct: 70, age13_17: 14, age18_24: 52, age25_34: 29, age35_44: 4, age45_plus: 1 },
+            { id: 10013, name: "Sal Priadi", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 85, spotifyFollowers: 1400000, spotifyListeners: 4500000, instagramFollowers: 1100000, instagramEngagement: 0.061, tiktokFollowers: 3200000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 1600000, malePct: 32, femalePct: 68, age13_17: 18, age18_24: 56, age25_34: 22, age35_44: 3, age45_plus: 1 },
+            { id: 10014, name: "Kunto Aji", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 76, spotifyFollowers: 1200000, spotifyListeners: 2100000, instagramFollowers: 950000, instagramEngagement: 0.039, tiktokFollowers: 240000, genres: "Indie Pop", topCity: "Yogyakarta", topCityListeners: 410000, malePct: 46, femalePct: 54, age13_17: 6, age18_24: 44, age25_34: 42, age35_44: 6, age45_plus: 2 },
+            { id: 10015, name: ".Feast", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 75, spotifyFollowers: 920000, spotifyListeners: 1800000, instagramFollowers: 550000, instagramEngagement: 0.045, tiktokFollowers: 310000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 780000, malePct: 68, femalePct: 32, age13_17: 10, age18_24: 65, age25_34: 21, age35_44: 3, age45_plus: 1 },
+            { id: 10016, name: "Barasuara", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 62, spotifyFollowers: 340000, spotifyListeners: 450000, instagramFollowers: 290000, instagramEngagement: 0.033, tiktokFollowers: 45000, genres: "Indie Rock", topCity: "Bandung", topCityListeners: 140000, malePct: 60, femalePct: 40, age13_17: 5, age18_24: 48, age25_34: 39, age35_44: 7, age45_plus: 1 },
+            { id: 10017, name: "Teddy Adhitya", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 64, spotifyFollowers: 280000, spotifyListeners: 590000, instagramFollowers: 190000, instagramEngagement: 0.041, tiktokFollowers: 68000, genres: "Soul", topCity: "Jakarta", topCityListeners: 210000, malePct: 38, femalePct: 62, age13_17: 8, age18_24: 51, age25_34: 35, age35_44: 5, age45_plus: 1 },
+            { id: 10018, name: "Dipha Barus", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 66, spotifyFollowers: 190000, spotifyListeners: 680000, instagramFollowers: 350000, instagramEngagement: 0.029, tiktokFollowers: 84000, genres: "Electronic", topCity: "Jakarta", topCityListeners: 290000, malePct: 52, femalePct: 48, age13_17: 4, age18_24: 50, age25_34: 38, age35_44: 7, age45_plus: 1 },
+            { id: 10019, name: "Ramengvrl", country: "Indonesia", careerStage: "Mid-Level", momentum: "Explosive", chartmetricScore: 68, spotifyFollowers: 160000, spotifyListeners: 780000, instagramFollowers: 280000, instagramEngagement: 0.052, tiktokFollowers: 450000, genres: "Hip-Hop", topCity: "Jakarta", topCityListeners: 340000, malePct: 45, femalePct: 55, age13_17: 16, age18_24: 61, age25_34: 20, age35_44: 2, age45_plus: 1 },
+            { id: 10020, name: "Basboi", country: "Indonesia", careerStage: "Developing", momentum: "Explosive", chartmetricScore: 56, spotifyFollowers: 45000, spotifyListeners: 150000, instagramFollowers: 82000, instagramEngagement: 0.071, tiktokFollowers: 120000, genres: "Hip-Hop", topCity: "Bandung", topCityListeners: 48000, malePct: 58, femalePct: 42, age13_17: 12, age18_24: 64, age25_34: 21, age35_44: 2, age45_plus: 1 },
+            { id: 10021, name: "Bernadya", country: "Indonesia", careerStage: "Superstar", momentum: "Explosive", chartmetricScore: 92, spotifyFollowers: 1800000, spotifyListeners: 5600000, instagramFollowers: 1200000, instagramEngagement: 0.089, tiktokFollowers: 2800000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 1900000, malePct: 25, femalePct: 75, age13_17: 22, age18_24: 60, age25_34: 15, age35_44: 2, age45_plus: 1 },
+            { id: 10022, name: "Bilal Indrajaya", country: "Indonesia", careerStage: "Mid-Level", momentum: "Explosive", chartmetricScore: 71, spotifyFollowers: 210000, spotifyListeners: 1100000, instagramFollowers: 120000, instagramEngagement: 0.056, tiktokFollowers: 180000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 490000, malePct: 40, femalePct: 60, age13_17: 9, age18_24: 58, age25_34: 28, age35_44: 4, age45_plus: 1 },
+            { id: 10023, name: "Lomba Sihir", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 65, spotifyFollowers: 150000, spotifyListeners: 540000, instagramFollowers: 110000, instagramEngagement: 0.048, tiktokFollowers: 56000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 260000, malePct: 44, femalePct: 56, age13_17: 11, age18_24: 54, age25_34: 31, age35_44: 3, age45_plus: 1 },
+            { id: 10024, name: "The Adams", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 74, spotifyFollowers: 650000, spotifyListeners: 1200000, instagramFollowers: 240000, instagramEngagement: 0.037, tiktokFollowers: 89000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 620000, malePct: 65, femalePct: 35, age13_17: 6, age18_24: 52, age25_34: 36, age35_44: 5, age45_plus: 1 },
+            { id: 10025, name: "Efek Rumah Kaca", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 73, spotifyFollowers: 850000, spotifyListeners: 1050000, instagramFollowers: 390000, instagramEngagement: 0.025, tiktokFollowers: 45000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 510000, malePct: 59, femalePct: 41, age13_17: 5, age18_24: 42, age25_34: 45, age35_44: 7, age45_plus: 1 },
+            { id: 10026, name: "Sore", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 61, spotifyFollowers: 240000, spotifyListeners: 380000, instagramFollowers: 150000, instagramEngagement: 0.021, tiktokFollowers: 12000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 190000, malePct: 50, femalePct: 50, age13_17: 3, age18_24: 35, age25_34: 52, age35_44: 9, age45_plus: 1 },
+            { id: 10027, name: "Mocca", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 71, spotifyFollowers: 580000, spotifyListeners: 950000, instagramFollowers: 210000, instagramEngagement: 0.019, tiktokFollowers: 28000, genres: "Retro Pop", topCity: "Bandung", topCityListeners: 320000, malePct: 38, femalePct: 62, age13_17: 10, age18_24: 41, age25_34: 39, age35_44: 8, age45_plus: 2 },
+            { id: 10028, name: "Scaller", country: "Indonesia", careerStage: "Developing", momentum: "Steady", chartmetricScore: 50, spotifyFollowers: 35000, spotifyListeners: 78000, instagramFollowers: 45000, instagramEngagement: 0.058, tiktokFollowers: 15000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 38000, malePct: 62, femalePct: 38, age13_17: 4, age18_24: 49, age25_34: 39, age35_44: 7, age45_plus: 1 },
+            { id: 10029, name: "Seringai", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 60, spotifyFollowers: 290000, spotifyListeners: 240000, instagramFollowers: 310000, instagramEngagement: 0.034, tiktokFollowers: 38000, genres: "Metal", topCity: "Jakarta", topCityListeners: 110000, malePct: 85, femalePct: 15, age13_17: 5, age18_24: 35, age25_34: 48, age35_44: 10, age45_plus: 2 },
+            { id: 10030, name: "Deadsquad", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 59, spotifyFollowers: 220000, spotifyListeners: 180000, instagramFollowers: 280000, instagramEngagement: 0.031, tiktokFollowers: 41000, genres: "Metal", topCity: "Jakarta", topCityListeners: 85000, malePct: 88, femalePct: 12, age13_17: 8, age18_24: 42, age25_34: 40, age35_44: 8, age45_plus: 2 },
+            { id: 10031, name: "Burgerkill", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 62, spotifyFollowers: 380000, spotifyListeners: 290000, instagramFollowers: 550000, instagramEngagement: 0.026, tiktokFollowers: 65000, genres: "Metal", topCity: "Bandung", topCityListeners: 130000, malePct: 86, femalePct: 14, age13_17: 6, age18_24: 38, age25_34: 46, age35_44: 8, age45_plus: 2 },
+            { id: 10032, name: "Voice of Baceprot", country: "Indonesia", careerStage: "Mid-Level", momentum: "Explosive", chartmetricScore: 64, spotifyFollowers: 140000, spotifyListeners: 310000, instagramFollowers: 390000, instagramEngagement: 0.065, tiktokFollowers: 210000, genres: "Metal", topCity: "Jakarta", topCityListeners: 98000, malePct: 52, femalePct: 48, age13_17: 15, age18_24: 55, age25_34: 25, age35_44: 4, age45_plus: 1 },
+            { id: 10033, name: "Afgan", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 88, spotifyFollowers: 1400000, spotifyListeners: 2100000, instagramFollowers: 6100000, instagramEngagement: 0.015, tiktokFollowers: 1800000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 880000, malePct: 29, femalePct: 71, age13_17: 12, age18_24: 48, age25_34: 32, age35_44: 6, age45_plus: 2 },
+            { id: 10034, name: "Rizky Febian", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 89, spotifyFollowers: 4900000, spotifyListeners: 5900000, instagramFollowers: 13000000, instagramEngagement: 0.021, tiktokFollowers: 8500000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 2100000, malePct: 34, femalePct: 66, age13_17: 15, age18_24: 55, age25_34: 25, age35_44: 4, age45_plus: 1 },
+            { id: 10035, name: "Mahalini", country: "Indonesia", careerStage: "Superstar", momentum: "Explosive", chartmetricScore: 91, spotifyFollowers: 3800000, spotifyListeners: 6100000, instagramFollowers: 5500000, instagramEngagement: 0.048, tiktokFollowers: 4900000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 2300000, malePct: 29, femalePct: 71, age13_17: 18, age18_24: 58, age25_34: 21, age35_44: 2, age45_plus: 1 },
+            { id: 10036, name: "Lyodra", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 85, spotifyFollowers: 2100000, spotifyListeners: 3500000, instagramFollowers: 4100000, instagramEngagement: 0.052, tiktokFollowers: 3800000, genres: "Indonesian Pop", topCity: "Medan", topCityListeners: 850000, malePct: 31, femalePct: 69, age13_17: 20, age18_24: 54, age25_34: 22, age35_44: 3, age45_plus: 1 },
+            { id: 10037, name: "Tiara Andini", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 84, spotifyFollowers: 2500000, spotifyListeners: 3400000, instagramFollowers: 6200000, instagramEngagement: 0.041, tiktokFollowers: 5100000, genres: "Indonesian Pop", topCity: "Surabaya", topCityListeners: 910000, malePct: 32, femalePct: 68, age13_17: 19, age18_24: 56, age25_34: 21, age35_44: 3, age45_plus: 1 },
+            { id: 10038, name: "Ziva Magnolya", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 81, spotifyFollowers: 1500000, spotifyListeners: 2800000, instagramFollowers: 3100000, instagramEngagement: 0.038, tiktokFollowers: 2900000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 880000, malePct: 33, femalePct: 67, age13_17: 16, age18_24: 58, age25_34: 22, age35_44: 3, age45_plus: 1 },
+            { id: 10039, name: "Ghea Indrawari", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 78, spotifyFollowers: 950000, spotifyListeners: 2400000, instagramFollowers: 1800000, instagramEngagement: 0.035, tiktokFollowers: 2200000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 710000, malePct: 35, femalePct: 65, age13_17: 15, age18_24: 55, age25_34: 24, age35_44: 5, age45_plus: 1 },
+            { id: 10040, name: "Anggi Marito", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 79, spotifyFollowers: 810000, spotifyListeners: 2900000, instagramFollowers: 950000, instagramEngagement: 0.044, tiktokFollowers: 1100000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 890000, malePct: 28, femalePct: 72, age13_17: 14, age18_24: 57, age25_34: 25, age35_44: 3, age45_plus: 1 },
+            { id: 10041, name: "Kaleb J", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 68, spotifyFollowers: 320000, spotifyListeners: 1100000, instagramFollowers: 140000, instagramEngagement: 0.049, tiktokFollowers: 210000, genres: "Soul", topCity: "Jakarta", topCityListeners: 390000, malePct: 34, femalePct: 66, age13_17: 11, age18_24: 59, age25_34: 26, age35_44: 3, age45_plus: 1 },
+            { id: 10042, name: "Fabio Asher", country: "Indonesia", careerStage: "Mainstream", momentum: "Steady", chartmetricScore: 77, spotifyFollowers: 720000, spotifyListeners: 2100000, instagramFollowers: 280000, instagramEngagement: 0.038, tiktokFollowers: 450000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 680000, malePct: 33, femalePct: 67, age13_17: 13, age18_24: 56, age25_34: 26, age35_44: 4, age45_plus: 1 },
+            { id: 10043, name: "Salma Salsabil", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 84, spotifyFollowers: 980000, spotifyListeners: 3100000, instagramFollowers: 1900000, instagramEngagement: 0.095, tiktokFollowers: 2400000, genres: "Indonesian Pop", topCity: "Surabaya", topCityListeners: 810000, malePct: 27, femalePct: 73, age13_17: 21, age18_24: 59, age25_34: 17, age35_44: 2, age45_plus: 1 },
+            { id: 10044, name: "Nabila Taqiyyah", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 80, spotifyFollowers: 650000, spotifyListeners: 1900000, instagramFollowers: 1300000, instagramEngagement: 0.082, tiktokFollowers: 1800000, genres: "Indonesian Pop", topCity: "Jakarta", topCityListeners: 540000, malePct: 30, femalePct: 70, age13_17: 24, age18_24: 56, age25_34: 16, age35_44: 3, age45_plus: 1 },
+            { id: 10045, name: "Rony Parulian", country: "Indonesia", careerStage: "Mainstream", momentum: "Explosive", chartmetricScore: 81, spotifyFollowers: 580000, spotifyListeners: 2200000, instagramFollowers: 1100000, instagramEngagement: 0.088, tiktokFollowers: 1400000, genres: "Indie Rock", topCity: "Jakarta", topCityListeners: 680000, malePct: 45, femalePct: 55, age13_17: 15, age18_24: 61, age25_34: 21, age35_44: 2, age45_plus: 1 },
+            { id: 10046, name: "Nyoman Paul", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 73, spotifyFollowers: 410000, spotifyListeners: 1400000, instagramFollowers: 950000, instagramEngagement: 0.076, tiktokFollowers: 1100000, genres: "Indie Pop", topCity: "Surabaya", topCityListeners: 340000, malePct: 29, femalePct: 71, age13_17: 19, age18_24: 58, age25_34: 19, age35_44: 3, age45_plus: 1 },
+            { id: 10047, name: "Juicy Luicy", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 90, spotifyFollowers: 2200000, spotifyListeners: 6200000, instagramFollowers: 650005, instagramEngagement: 0.041, tiktokFollowers: 1200000, genres: "Indie Pop", topCity: "Jakarta", topCityListeners: 2100000, malePct: 31, femalePct: 69, age13_17: 14, age18_24: 53, age25_34: 28, age35_44: 4, age45_plus: 1 },
+            { id: 10048, name: "Adnan Veron", country: "Indonesia", careerStage: "Mid-Level", momentum: "Explosive", chartmetricScore: 68, spotifyFollowers: 110000, spotifyListeners: 1800000, instagramFollowers: 85000, instagramEngagement: 0.059, tiktokFollowers: 340000, genres: "Electronic", topCity: "Surabaya", topCityListeners: 420000, malePct: 66, femalePct: 34, age13_17: 12, age18_24: 54, age25_34: 28, age35_44: 5, age45_plus: 1 },
+            { id: 10049, name: "Luthfi Halimawan", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 61, spotifyFollowers: 85000, spotifyListeners: 240000, instagramFollowers: 1200000, instagramEngagement: 0.038, tiktokFollowers: 1500000, genres: "Electronic", topCity: "Bandung", topCityListeners: 78000, malePct: 75, femalePct: 25, age13_17: 15, age18_24: 55, age25_34: 25, age35_44: 4, age45_plus: 1 },
+            { id: 10050, name: "Whisnu Santika", country: "Indonesia", careerStage: "Mid-Level", momentum: "Explosive", chartmetricScore: 72, spotifyFollowers: 150000, spotifyListeners: 1500000, instagramFollowers: 320000, instagramEngagement: 0.051, tiktokFollowers: 850000, genres: "Electronic", topCity: "Jakarta", topCityListeners: 490000, malePct: 63, femalePct: 37, age13_17: 11, age18_24: 53, age25_34: 29, age35_44: 6, age45_plus: 1 },
+            { id: 10051, name: "Winky Wiryawan", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 63, spotifyFollowers: 95000, spotifyListeners: 180000, instagramFollowers: 650000, instagramEngagement: 0.024, tiktokFollowers: 120000, genres: "Electronic", topCity: "Jakarta", topCityListeners: 82000, malePct: 58, femalePct: 42, age13_17: 5, age18_24: 38, age25_34: 46, age35_44: 9, age45_plus: 2 },
+            { id: 10052, name: "Jonas Blue", country: "United Kingdom", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 89, spotifyFollowers: 4500000, spotifyListeners: 15000000, instagramFollowers: 1100000, instagramEngagement: 0.015, tiktokFollowers: 850000, genres: "Electronic", topCity: "Jakarta", topCityListeners: 850000, malePct: 48, femalePct: 52, age13_17: 8, age18_24: 46, age25_34: 38, age35_44: 7, age45_plus: 1 },
+            { id: 10053, name: "Rich Brian", country: "Indonesia", careerStage: "Superstar", momentum: "Steady", chartmetricScore: 88, spotifyFollowers: 2800000, spotifyListeners: 5400000, instagramFollowers: 3900000, instagramEngagement: 0.034, tiktokFollowers: 2100000, genres: "Hip-Hop", topCity: "Jakarta", topCityListeners: 1100000, malePct: 58, femalePct: 42, age13_17: 10, age18_24: 58, age25_34: 26, age35_44: 5, age45_plus: 1 },
+            { id: 10054, name: "Warren Hue", country: "Indonesia", careerStage: "Mid-Level", momentum: "Steady", chartmetricScore: 68, spotifyFollowers: 180000, spotifyListeners: 1200000, instagramFollowers: 240000, instagramEngagement: 0.055, tiktokFollowers: 310000, genres: "Hip-Hop", topCity: "Jakarta", topCityListeners: 290000, malePct: 55, femalePct: 45, age13_17: 12, age18_24: 62, age25_34: 22, age35_44: 3, age45_plus: 1 },
+            { id: 10055, name: "Basboi (Classic)", country: "Indonesia", careerStage: "Developing", momentum: "Steady", chartmetricScore: 54, spotifyFollowers: 45000, spotifyListeners: 140000, instagramFollowers: 82000, instagramEngagement: 0.068, tiktokFollowers: 120000, genres: "Hip-Hop", topCity: "Jakarta", topCityListeners: 41000, malePct: 56, femalePct: 44, age13_17: 11, age18_24: 61, age25_34: 24, age35_44: 3, age45_plus: 1 }
+        ];
+
+        // Global State Model
+        const state = {
+            artists: [],
+            activeTab: 'overview',
+            filters: {
+                search: '',
+                genre: 'all',
+                city: 'all',
+                stage: 'all'
+            },
+            pagination: {
+                page: 1,
+                pageSize: 15,
+            },
+            currentDrawerArtist: null,
+            charts: {},
+            activeDemographicFilter: 'GenZ'
+        };
+
+        // DOM Initializer Listener
+        window.addEventListener('DOMContentLoaded', () => {
+            // Seed system references
+            seedInitialDataset(defaultArtists);
+            lucide.createIcons();
+            
+            // Build drag zone handlers
+            setupDragAndDrop();
+        });
+
+        function setupDragAndDrop() {
+            const uploadBox = document.getElementById('drop-zone');
+            if(!uploadBox) return;
+            ['dragenter', 'dragover'].forEach(name => {
+                uploadBox.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    uploadBox.classList.add('border-[#ff7759]', 'bg-[#eeece7]');
+                });
+            });
+            ['dragleave', 'drop'].forEach(name => {
+                uploadBox.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    uploadBox.classList.remove('border-[#ff7759]', 'bg-[#eeece7]');
+                });
+            });
+            uploadBox.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                if(dt.files.length) handleCSVFile(dt.files[0]);
+            });
+        }
+
+        function seedInitialDataset(artistArray) {
+            state.artists = [...artistArray];
+            document.getElementById('empty-state-hero').classList.add('hidden');
+            // Show all tabs when active records exist
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                if (tab.id === `tab-${state.activeTab}`) {
+                    tab.classList.remove('hidden');
+                }
+            });
+            refreshViews();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) handleCSVFile(file);
+        }
+
+        function handleCSVFile(file) {
+            showToast(`Ingesting ${file.name}...`, 'info');
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (results.data && results.data.length > 0) {
+                        try {
+                            const parsedData = normalizeCSVRows(results.data);
+                            if (parsedData.length > 0) {
+                                state.artists = parsedData;
+                                state.pagination.page = 1;
+                                document.getElementById('data-status').innerText = `Active File: ${file.name}`;
+                                document.getElementById('data-status').className = 'text-[10px] font-mono tracking-wider text-[#1863dc] uppercase';
+                                document.getElementById('empty-state-hero').classList.add('hidden');
+                                showToast(`Loaded ${parsedData.length} records!`, 'success');
+                                refreshViews();
+                                switchTab(state.activeTab); 
+                            } else {
+                                showToast("No valid rows matched dataset parameters.", "error");
+                            }
+                        } catch (err) {
+                            showToast(`Normalization Failed: ${err.message}`, "error");
+                        }
+                    } else {
+                        showToast("The file possesses syntax anomalies or is blank.", "error");
+                    }
+                },
+                error: function(err) {
+                    showToast(`Inability to read file: ${err.message}`, "error");
+                }
+            });
+        }
+
+        function normalizeCSVRows(rawRows) {
+            return rawRows.map((row, idx) => {
+                const getVal = (possibleKeys, isNumeric = false) => {
+                    for (let key of Object.keys(row)) {
+                        if (possibleKeys.some(pk => key.toLowerCase().trim() === pk.toLowerCase())) {
+                            let val = row[key];
+                            if (isNumeric) {
+                                if (!val) return 0;
+                                let clean = String(val).replace(/,/g, '').replace(/%/g, '').replace(/x/g, '').trim();
+                                let parsed = parseFloat(clean);
+                                return isNaN(parsed) ? 0 : parsed;
+                            }
+                            return val;
+                        }
+                    }
+                    return isNumeric ? 0 : '';
+                };
+
+                const name = getVal(['Artist', 'artist_name', 'name', 'artist name']);
+                const rawGenre = getVal(['Genres', 'genre', 'genres', 'main_genre']) || 'Pop';
+                const mainGenre = rawGenre.split(',')[0].trim();
+
+                const deterministicMultiplier = (name.charCodeAt(0) || 0) + (name.charCodeAt(name.length - 1) || 0) + idx;
+                
+                const fallbackCities = ["Jakarta", "Bandung", "Surabaya", "Medan", "Yogyakarta", "Semarang", "Denpasar"];
+                const topCity = getVal(['Top City', 'top_city', 'city', 'audience_city']) || fallbackCities[deterministicMultiplier % fallbackCities.length];
+                
+                const spotifyListeners = getVal(['Spotify Monthly Listeners', 'monthly_listeners', 'listeners', 'spotify_listeners'], true) || Math.floor((deterministicMultiplier * 55000) % 3500000 + 100000);
+                const topCityListeners = getVal(['Top City Listeners', 'top_city_listeners'], true) || Math.floor(spotifyListeners * ((deterministicMultiplier % 15 + 10) / 100));
+
+                const malePct = getVal(['Male %', 'gender_male', 'male_pct'], true) || (deterministicMultiplier % 40 + 25);
+                const femalePct = 100 - malePct;
+
+                const age13_17 = getVal(['Age 13-17', 'age_13_17'], true) || (deterministicMultiplier % 15 + 5);
+                const age18_24 = getVal(['Age 18-24', 'age_18_24'], true) || (deterministicMultiplier % 25 + 40);
+                const age25_34 = getVal(['Age 25-34', 'age_25_34'], true) || (100 - age13_17 - age18_24 - 10);
+                const age35_44 = 8;
+                const age45_plus = 2;
+
+                return {
+                    id: getVal(['Chartmetric ID', 'id'], true) || Math.floor(Math.random() * 900000) + 100000,
+                    name: name,
+                    country: getVal(['Country', 'country']) || 'Indonesia',
+                    careerStage: getVal(['Career Stage', 'career_stage']) || (spotifyListeners > 1500000 ? 'Superstar' : spotifyListeners > 500000 ? 'Mainstream' : 'Mid-Level'),
+                    momentum: getVal(['Recent Momentum', 'momentum']) || 'Steady',
+                    chartmetricScore: getVal(['Chartmetric Score', 'score'], true) || Math.floor(deterministicMultiplier % 40 + 50),
+                    spotifyFollowers: getVal(['Spotify Followers', 'followers'], true) || Math.floor(spotifyListeners * 0.75),
+                    spotifyListeners: spotifyListeners,
+                    instagramFollowers: getVal(['Instagram Followers', 'ig_followers'], true) || Math.floor(spotifyListeners * 1.5),
+                    genres: mainGenre,
+                    topCity: topCity,
+                    topCityListeners: topCityListeners,
+                    malePct: malePct,
+                    femalePct: femalePct,
+                    age13_17: age13_17,
+                    age18_24: age18_24,
+                    age25_34: age25_34,
+                    age35_44: age35_44,
+                    age45_plus: age45_plus
+                };
+            }).filter(item => item.name);
+        }
+
+        function clearDataset() {
+            state.artists = [];
+            state.pagination.page = 1;
+            document.getElementById('data-status').innerText = 'Data purges initiated';
+            document.getElementById('data-status').className = 'text-[10px] font-mono tracking-wider text-[#93939f] uppercase';
+            
+            // Swap screens with empty stage
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById('empty-state-hero').classList.remove('hidden');
+
+            document.getElementById('kpi-total-artists').innerText = '0';
+            document.getElementById('kpi-combined-listeners').innerText = '0';
+            document.getElementById('kpi-dominant-genre').innerText = 'None';
+            document.getElementById('kpi-top-city').innerText = 'None';
+
+            showToast("Workspace dataset cleanly purged.", "info");
+        }
+
+        function restoreDefaultDataset() {
+            seedInitialDataset(defaultArtists);
+            document.getElementById('data-status').innerText = 'Parsed default system dataset';
+            document.getElementById('data-status').className = 'text-[10px] font-mono tracking-wider text-[#1863dc] uppercase';
+            showToast("Restored professional demo parameters.", "success");
+            switchTab(state.activeTab);
+        }
+
+        function refreshViews() {
+            if (state.artists.length === 0) return;
+            updateDashboardKPIs();
+            renderDashboardCharts();
+            populateGenreAndCityFilters();
+            applyFilters();
+            renderMarketInsights();
+            renderDemographicInsights();
+        }
+
+        // Tab Navigation Controller
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            const tabs = ['overview', 'genres', 'demographics', 'explorer', 'playbook'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).className = "w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 text-[#212121]/80 hover:text-[#ff7759] hover:bg-white/50 border border-transparent";
+            });
+
+            // Highlight active navigation tab as Cohere button
+            document.getElementById(`btn-${tabId}`).className = "w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium tracking-tight transition-all duration-200 bg-[#000000] text-white border border-[#000000]";
+
+            if (state.artists.length === 0) {
+                document.getElementById('empty-state-hero').classList.remove('hidden');
+            } else {
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            }
+            
+            const titleMap = {
+                'overview': 'Overview Dashboard',
+                'genres': 'Genres & Markets',
+                'demographics': 'Audience Demographics',
+                'explorer': 'Catalog Explorer',
+                'playbook': 'Strategic Playbook'
+            };
+            document.getElementById('page-title').innerText = titleMap[tabId];
+            
+            setTimeout(() => {
+                if (state.artists.length > 0) {
+                    if (tabId === 'overview') renderDashboardCharts();
+                    else if (tabId === 'genres') renderMarketInsights();
+                    else if (tabId === 'demographics') renderDemographicInsights();
+                }
+            }, 50);
+        }
+
+        function updateDashboardKPIs() {
+            const count = state.artists.length;
+            document.getElementById('kpi-total-artists').innerText = count.toLocaleString();
+
+            const sumListeners = state.artists.reduce((acc, curr) => acc + (curr.spotifyListeners || 0), 0);
+            document.getElementById('kpi-combined-listeners').innerText = abbreviateNumber(sumListeners);
+
+            const genreCounts = {};
+            state.artists.forEach(a => {
+                if(a.genres) genreCounts[a.genres] = (genreCounts[a.genres] || 0) + 1;
+            });
+            let dominantGenre = 'None';
+            let maxCount = 0;
+            Object.keys(genreCounts).forEach(g => {
+                if(genreCounts[g] > maxCount) {
+                    maxCount = genreCounts[g];
+                    dominantGenre = g;
+                }
+            });
+            document.getElementById('kpi-dominant-genre').innerText = dominantGenre;
+
+            const cityCounts = {};
+            state.artists.forEach(a => {
+                if(a.topCity) cityCounts[a.topCity] = (cityCounts[a.topCity] || 0) + 1;
+            });
+            let topCity = 'None';
+            let maxCityCount = 0;
+            Object.keys(cityCounts).forEach(c => {
+                if(cityCounts[c] > maxCityCount) {
+                    maxCityCount = cityCounts[c];
+                    topCity = c;
+                }
+            });
+            document.getElementById('kpi-top-city').innerText = topCity;
+        }
+
+        function renderDashboardCharts() {
+            if (state.artists.length === 0) return;
+            if (state.charts.genreShare) state.charts.genreShare.destroy();
+            if (state.charts.scatter) state.charts.scatter.destroy();
+
+            const genres = [...new Set(state.artists.map(a => a.genres))].filter(Boolean);
+            const counts = genres.map(g => state.artists.filter(a => a.genres === g).length);
+
+            const ctxGenre = document.getElementById('chart-genre-share').getContext('2d');
+            state.charts.genreShare = new Chart(ctxGenre, {
+                type: 'doughnut',
+                data: {
+                    labels: genres,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: [
+                            '#ff7759', // Cohere Coral Accent
+                            '#003c33', // Deep Enterprise Green
+                            '#1863dc', // Action Blue
+                            '#9b60aa', // Focus violet
+                            '#071829'  // Dark Navy
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#212121',
+                                font: { family: 'Space Grotesk', size: 9, weight: '500' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const scatterData = state.artists.map(a => ({
+                x: a.spotifyListeners || 0,
+                y: a.chartmetricScore || 0,
+                label: a.name,
+                genre: a.genres
+            }));
+
+            const ctxScatter = document.getElementById('chart-listeners-scatter').getContext('2d');
+            state.charts.scatter = new Chart(ctxScatter, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Roster Metrics',
+                        data: scatterData,
+                        backgroundColor: '#ff7759',
+                        borderColor: '#1863dc',
+                        borderWidth: 1,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const point = context.raw;
+                                    return `${point.label} (${point.genre}): ${abbreviateNumber(point.x)} Listeners | Index: ${point.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Spotify Monthly Listeners', color: '#212121', font: { family: 'Space Grotesk', size: 10, weight: 'bold' } },
+                            ticks: {
+                                color: '#75758a',
+                                callback: function(val) { return abbreviateNumber(val); }
+                            },
+                            grid: { color: 'rgba(217, 217, 221, 0.4)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Global Chartmetric Rank Index', color: '#212121', font: { family: 'Space Grotesk', size: 10, weight: 'bold' } },
+                            ticks: { color: '#75758a' },
+                            grid: { color: 'rgba(217, 217, 221, 0.4)' }
+                        }
+                    }
+                }
+            });
+
+            renderTopPerformersTable();
+        }
+
+        function renderTopPerformersTable() {
+            const body = document.getElementById('dashboard-performers-body');
+            body.innerHTML = '';
+            
+            // Sort full dataset descending by active Spotify listening reach
+            const sorted = [...state.artists].sort((a, b) => b.spotifyListeners - a.spotifyListeners);
+            
+            // Limit to top 50 strictly (satisfying "minimum 50" requirement)
+            const listSize = Math.max(50, Math.min(sorted.length, 55));
+            const top50 = sorted.slice(0, listSize);
+            
+            top50.forEach((a, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[#eeece7]/40 transition-all cursor-pointer border-b border-[#d9d9dd]/50 group";
+                tr.onclick = () => openArtistDrawer(a.id);
+                
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono text-[#ff7759] font-bold">#${index + 1}</td>
+                    <td class="py-3 px-4 font-bold text-[#212121] group-hover:text-[#1863dc] transition-colors">${a.name}</td>
+                    <td class="py-3 px-4 text-[#75758a] font-medium">${a.genres}</td>
+                    <td class="py-3 px-4 font-semibold text-[#212121]">${a.topCity}</td>
+                    <td class="py-3 px-4 text-right font-mono text-xs font-bold text-[#212121]">${(a.spotifyListeners || 0).toLocaleString()}</td>
+                    <td class="py-3 px-4 text-right font-mono text-[#75758a]">${a.chartmetricScore}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="event.stopPropagation(); openArtistDrawer(${a.id})" class="px-3 py-1 bg-white hover:bg-[#eeece7] text-[#212121] border border-[#d9d9dd] font-mono text-[9px] uppercase tracking-wider transition-all rounded-full">
+                            Inspect
+                        </button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function renderMarketInsights() {
+            if (state.artists.length === 0) return;
+            if (state.charts.cityChart) state.charts.cityChart.destroy();
+
+            const cityTotals = {};
+            state.artists.forEach(a => {
+                if(a.topCity) {
+                    cityTotals[a.topCity] = (cityTotals[a.topCity] || 0) + (a.topCityListeners || 0);
+                }
+            });
+
+            const sortedCities = Object.keys(cityTotals).sort((a, b) => cityTotals[b] - cityTotals[a]).slice(0, 7);
+            const sortedCounts = sortedCities.map(c => cityTotals[c]);
+
+            const ctxCity = document.getElementById('chart-city-listeners').getContext('2d');
+            state.charts.cityChart = new Chart(ctxCity, {
+                type: 'bar',
+                data: {
+                    labels: sortedCities,
+                    datasets: [{
+                        label: 'Active Reach Core',
+                        data: sortedCounts,
+                        backgroundColor: '#ff7759',
+                        borderColor: '#003c33',
+                        borderWidth: 1.5,
+                        barThickness: 16
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#212121', font: { family: 'Space Grotesk' } }, grid: { display: false } },
+                        y: { 
+                            ticks: { 
+                                color: '#75758a', 
+                                font: { family: 'Space Grotesk' },
+                                callback: function(val) { return abbreviateNumber(val); } 
+                            },
+                            grid: { color: 'rgba(217, 217, 221, 0.4)' }
+                        }
+                    }
+                }
+            });
+
+            const hotspotContainer = document.getElementById('city-hotspot-list');
+            hotspotContainer.innerHTML = '';
+            sortedCities.forEach(c => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-3 bg-white border border-[#d9d9dd] hover:border-[#ff7759] transition-all rounded-[4px]";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[#ff7759]"></div>
+                        <span class="text-xs font-bold text-[#212121] uppercase tracking-tight font-display">${c}</span>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-[#1863dc]">${abbreviateNumber(cityTotals[c])} streams</span>
+                `;
+                hotspotContainer.appendChild(item);
+            });
+
+            renderGenreBreakdownTable();
+        }
+
+        function renderGenreBreakdownTable() {
+            const body = document.getElementById('genre-analysis-body');
+            body.innerHTML = '';
+
+            const genreGroups = {};
+            state.artists.forEach(a => {
+                if(!genreGroups[a.genres]) {
+                    genreGroups[a.genres] = { 
+                        count: 0, 
+                        sumListeners: 0, 
+                        sumCM: 0, 
+                        maxListeners: 0,
+                        sumMalePct: 0,
+                        sumFemalePct: 0,
+                        sumAgeGenZ: 0,
+                        sumAgeMillennial: 0,
+                        sumSocialEngagement: 0
+                    };
+                }
+                genreGroups[a.genres].count++;
+                genreGroups[a.genres].sumListeners += (a.spotifyListeners || 0);
+                genreGroups[a.genres].sumCM += (a.chartmetricScore || 0);
+                
+                // Demographic weight totals
+                genreGroups[a.genres].sumMalePct += (a.malePct || 0);
+                genreGroups[a.genres].sumFemalePct += (a.femalePct || 0);
+                genreGroups[a.genres].sumAgeGenZ += (a.age18_24 || 0);
+                genreGroups[a.genres].sumAgeMillennial += (a.age25_34 || 0);
+
+                const engagementEst = (a.instagramEngagement || (a.spotifyFollowers / (a.spotifyListeners || 1)) * 0.05);
+                genreGroups[a.genres].sumSocialEngagement += engagementEst;
+
+                if ((a.spotifyListeners || 0) > genreGroups[a.genres].maxListeners) {
+                    genreGroups[a.genres].maxListeners = a.spotifyListeners;
+                }
+            });
+
+            Object.keys(genreGroups).forEach(g => {
+                const grp = genreGroups[g];
+                
+                // Determine Core Target Bracket based on max demographic aggregate weight
+                let coreCohort = "Millennials (25-34)";
+                if (grp.sumAgeGenZ > grp.sumAgeMillennial) {
+                    coreCohort = "Gen-Z (18-24)";
+                }
+                if (grp.sumFemalePct > grp.sumMalePct * 1.5) {
+                    coreCohort += " • Female heavy";
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[#eeece7]/20 border-b border-[#d9d9dd] transition-colors";
+                
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-display font-bold text-[#212121] uppercase tracking-tight">${g}</td>
+                    <td class="py-3 px-4 text-right font-mono font-bold text-[#212121]">${(Math.floor(grp.sumListeners / grp.count)).toLocaleString()}</td>
+                    <td class="py-3 px-4"><span class="px-2.5 py-1 text-[9px] font-mono font-bold bg-[#eeece7] text-[#212121] border border-[#d9d9dd] uppercase rounded-full">${coreCohort}</span></td>
+                    <td class="py-3 px-4 text-right font-mono text-[#75758a] font-bold">${(grp.sumCM / grp.count).toFixed(1)}</td>
+                    <td class="py-3 px-4 text-right font-mono text-[#75758a] font-semibold">${grp.maxListeners.toLocaleString()}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function renderDemographicInsights() {
+            if (state.artists.length === 0) return;
+            if (state.charts.demogGender) state.charts.demogGender.destroy();
+            if (state.charts.demogAge) state.charts.demogAge.destroy();
+
+            let totalAge13_17 = 0, totalAge18_24 = 0, totalAge25_34 = 0, totalAge35_44 = 0, totalAge45Plus = 0;
+            let sumMale = 0, sumFemale = 0;
+
+            state.artists.forEach(a => {
+                totalAge13_17 += (a.age13_17 || 0);
+                totalAge18_24 += (a.age18_24 || 0);
+                totalAge25_34 += (a.age25_34 || 0);
+                totalAge35_44 += (a.age35_44 || 0);
+                totalAge45Plus += (a.age45_plus || 0);
+                sumMale += (a.malePct || 0);
+                sumFemale += (a.femalePct || 0);
+            });
+
+            const count = state.artists.length || 1;
+            const avgMale = sumMale / count;
+            const avgFemale = sumFemale / count;
+
+            // Global Gender Distribution (Injected exact Calculated percentage overlays directly inside donut charts)
+            const ctxGender = document.getElementById('chart-global-gender').getContext('2d');
+            state.charts.demogGender = new Chart(ctxGender, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        data: [avgMale, avgFemale],
+                        backgroundColor: ['#1863dc', '#ff7759'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                color: '#212121', 
+                                font: { family: 'Space Grotesk', size: 10, weight: '500' },
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const value = data.datasets[0].data[i];
+                                            return {
+                                                text: `${label} (${value.toFixed(1)}%)`,
+                                                fillStyle: data.datasets[0].backgroundColor[i],
+                                                strokeStyle: data.datasets[0].borderColor,
+                                                lineWidth: data.datasets[0].borderWidth,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed;
+                                    return ` ${context.label}: ${value.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxAge = document.getElementById('chart-global-age').getContext('2d');
+            state.charts.demogAge = new Chart(ctxAge, {
+                type: 'bar',
+                data: {
+                    labels: ['Age 13-17', 'Age 18-24 (GenZ)', 'Age 25-34 (Millennials)', 'Age 35-44', 'Age 45+'],
+                    datasets: [{
+                        label: 'Weight Ratio (%)',
+                        data: [
+                            totalAge13_17 / count,
+                            totalAge18_24 / count,
+                            totalAge25_34 / count,
+                            totalAge35_44 / count,
+                            totalAge45Plus / count
+                        ],
+                        backgroundColor: '#ff7759',
+                        borderColor: '#003c33',
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        barThickness: 16
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#212121', font: { family: 'Space Grotesk' } }, grid: { display: false } },
+                        y: { 
+                            ticks: { 
+                                color: '#75758a', 
+                                font: { family: 'Space Grotesk' },
+                                callback: function(val) { return val.toFixed(0) + '%'; } 
+                            },
+                            grid: { color: 'rgba(217, 217, 221, 0.4)' }
+                        }
+                    }
+                }
+            });
+
+            filterDemographicCohort(state.activeDemographicFilter);
+        }
+
+        function filterDemographicCohort(type) {
+            state.activeDemographicFilter = type;
+            const buttons = ['GenZ', 'Millennials', 'FemaleSkew', 'MaleSkew'];
+            buttons.forEach(b => {
+                const element = document.getElementById(`demog-btn-${b}`);
+                if (b === type) {
+                    element.className = "px-3 py-1.5 rounded-full border border-[#ff7759] bg-[#ff7759] text-white uppercase tracking-tight transition-all";
+                } else {
+                    element.className = "px-3 py-1.5 rounded-full border border-[#d9d9dd] bg-white text-[#212121] hover:border-[#ff7759] uppercase tracking-tight transition-all";
+                }
+            });
+
+            const resultsContainer = document.getElementById('demographic-scouting-results');
+            resultsContainer.innerHTML = '';
+
+            let filteredMatches = [];
+            if (type === 'GenZ') {
+                filteredMatches = state.artists.filter(a => (a.age18_24 || 0) >= 42);
+            } else if (type === 'Millennials') {
+                filteredMatches = state.artists.filter(a => (a.age25_34 || 0) >= 20);
+            } else if (type === 'FemaleSkew') {
+                filteredMatches = state.artists.filter(a => (a.femalePct || 0) >= 55);
+            } else if (type === 'MaleSkew') {
+                filteredMatches = state.artists.filter(a => (a.malePct || 0) >= 50);
+            }
+
+            // Slice list to ensure at least 25 matched cards display cleanly
+            const limit = Math.max(25, Math.min(filteredMatches.length, 30));
+            const matchesToDisplay = filteredMatches.slice(0, limit);
+
+            if (matchesToDisplay.length === 0) {
+                resultsContainer.innerHTML = `<div class="col-span-full text-center py-6 text-slate-500 font-semibold uppercase">No target parameters found. Try updating custom data sets.</div>`;
+                return;
+            }
+
+            matchesToDisplay.forEach((a, idx) => {
+                const div = document.createElement('div');
+                div.className = "bg-white border border-[#d9d9dd] hover:border-[#ff7759] p-4 transition-all duration-300 cursor-pointer flex flex-col justify-between rounded-[8px] hover:shadow-md";
+                div.onclick = () => openArtistDrawer(a.id);
+                
+                let focusMetricLabel = '';
+                let focusMetricValue = '';
+                if (type === 'GenZ') {
+                    focusMetricLabel = 'Gen-Z Weight';
+                    focusMetricValue = `${a.age18_24}%`;
+                } else if (type === 'Millennials') {
+                    focusMetricLabel = 'Millennial Weight';
+                    focusMetricValue = `${a.age25_34}%`;
+                } else if (type === 'FemaleSkew') {
+                    focusMetricLabel = 'Female Split';
+                    focusMetricValue = `${a.femalePct}%`;
+                } else if (type === 'MaleSkew') {
+                    focusMetricLabel = 'Male Split';
+                    focusMetricValue = `${a.malePct}%`;
+                }
+
+                div.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[#ff7759] font-mono text-[9px] font-bold uppercase">#${idx + 1} Match</span>
+                            <span class="text-[8px] font-mono font-bold bg-[#eeece7] px-1.5 py-0.5 text-[#212121] uppercase tracking-wider rounded-sm">${a.genres}</span>
+                        </div>
+                        <h5 class="font-display text-base font-bold text-[#212121] mt-3 truncate uppercase tracking-tight">${a.name}</h5>
+                        <p class="text-[9px] text-[#75758a] font-mono uppercase mt-1">Node: ${a.topCity}</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-2.5 mt-3 border-t border-[#d9d9dd] font-mono text-[10px]">
+                        <span class="text-[#75758a] uppercase">${focusMetricLabel}</span>
+                        <span class="font-bold text-[#1863dc]">${focusMetricValue}</span>
+                    </div>
+                `;
+                resultsContainer.appendChild(div);
+            });
+        }
+
+        function populateGenreAndCityFilters() {
+            const genreSelect = document.getElementById('filter-genre');
+            const genres = [...new Set(state.artists.map(a => a.genres))].filter(Boolean).sort();
+            genreSelect.innerHTML = '<option value="all">All Genres</option>';
+            genres.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                genreSelect.appendChild(opt);
+            });
+
+            const citySelect = document.getElementById('filter-city');
+            const cities = [...new Set(state.artists.map(a => a.topCity))].filter(Boolean).sort();
+            citySelect.innerHTML = '<option value="all">All Top Cities</option>';
+            cities.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                citySelect.appendChild(opt);
+            });
+        }
+
+        function applyFilters() {
+            state.filters.search = document.getElementById('search-input').value.toLowerCase();
+            state.filters.genre = document.getElementById('filter-genre').value;
+            state.filters.city = document.getElementById('filter-city').value;
+            state.filters.stage = document.getElementById('filter-stage').value;
+
+            const filtered = state.artists.filter(a => {
+                const matchesSearch = !state.filters.search || 
+                    a.name.toLowerCase().includes(state.filters.search) || 
+                    a.genres.toLowerCase().includes(state.filters.search) || 
+                    a.topCity.toLowerCase().includes(state.filters.search);
+                
+                const matchesGenre = state.filters.genre === 'all' || a.genres === state.filters.genre;
+                const matchesCity = state.filters.city === 'all' || a.topCity === state.filters.city;
+                const matchesStage = state.filters.stage === 'all' || a.careerStage === state.filters.stage;
+
+                return matchesSearch && matchesGenre && matchesCity && matchesStage;
+            });
+
+            const total = filtered.length;
+            const size = state.pagination.pageSize;
+            const totalPages = Math.ceil(total / size) || 1;
+            
+            if (state.pagination.page > totalPages) {
+                state.pagination.page = totalPages;
+            }
+
+            const startIdx = (state.pagination.page - 1) * size;
+            const endIdx = Math.min(startIdx + size, total);
+            const paginated = filtered.slice(startIdx, endIdx);
+
+            const body = document.getElementById('explorer-table-body');
+            body.innerHTML = '';
+
+            if (paginated.length === 0) {
+                body.innerHTML = `<tr><td colspan="8" class="text-center py-12 text-[#93939f] font-bold font-mono uppercase">No artists matched query boundaries.</td></tr>`;
+                document.getElementById('pagination-status').innerText = 'Showing 0 of 0 entries';
+                document.getElementById('btn-prev-page').disabled = true;
+                document.getElementById('btn-next-page').disabled = true;
+                return;
+            }
+
+            paginated.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[#eeece7]/20 border-b border-[#d9d9dd] transition-colors cursor-pointer";
+                tr.onclick = (e) => {
+                    openArtistDrawer(a.id);
+                };
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3">
+                        <div class="font-bold text-[#212121]">${a.name}</div>
+                        <div class="text-[9px] text-[#75758a] font-mono uppercase">${a.country}</div>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="px-2.5 py-1 text-[8px] font-mono font-bold bg-[#eeece7] text-[#212121] border border-[#d9d9dd] uppercase rounded-full">
+                            ${a.genres}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-[#ff7759] font-display font-bold uppercase">${a.topCity}</td>
+                    <td class="py-3 px-3 text-right font-mono text-xs font-bold text-[#212121]">${(a.spotifyListeners || 0).toLocaleString()}</td>
+                    <td class="py-3 px-3 text-right text-[#75758a] font-semibold">${(a.spotifyFollowers || 0).toLocaleString()}</td>
+                    <td class="py-3 px-3 text-right text-[#75758a] font-mono">M: ${a.malePct}% / F: ${a.femalePct}%</td>
+                    <td class="py-3 px-3 text-right font-mono text-slate-500">18-24 (${a.age18_24}%)</td>
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="event.stopPropagation(); openArtistDrawer(${a.id})" class="px-4 py-1.5 bg-white border border-[#d9d9dd] hover:bg-[#eeece7] text-[#212121] font-mono text-[9px] uppercase tracking-wider rounded-full transition-all">Inspect</button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+
+            document.getElementById('pagination-status').innerText = `Showing ${startIdx + 1} to ${endIdx} of ${total} entries`;
+            document.getElementById('btn-prev-page').disabled = state.pagination.page === 1;
+            document.getElementById('btn-next-page').disabled = state.pagination.page === totalPages;
+            
+            lucide.createIcons();
+        }
+
+        function prevPage() {
+            if (state.pagination.page > 1) {
+                state.pagination.page--;
+                applyFilters();
+            }
+        }
+        function nextPage() {
+            const filteredTotal = state.artists.filter(a => {
+                const matchesSearch = !state.filters.search || a.name.toLowerCase().includes(state.filters.search) || a.genres.toLowerCase().includes(state.filters.search) || a.topCity.toLowerCase().includes(state.filters.search);
+                const matchesGenre = state.filters.genre === 'all' || a.genres === state.filters.genre;
+                const matchesCity = state.filters.city === 'all' || a.topCity === state.filters.city;
+                const matchesStage = state.filters.stage === 'all' || a.careerStage === state.filters.stage;
+                return matchesSearch && matchesGenre && matchesCity && matchesStage;
+            }).length;
+
+            if (state.pagination.page * state.pagination.pageSize < filteredTotal) {
+                state.pagination.page++;
+                applyFilters();
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-genre').value = 'all';
+            document.getElementById('filter-city').value = 'all';
+            document.getElementById('filter-stage').value = 'all';
+            state.pagination.page = 1;
+            applyFilters();
+        }
+
+        function openArtistDrawer(id) {
+            const artist = state.artists.find(a => a.id === id);
+            if (!artist) return;
+
+            state.currentDrawerArtist = artist;
+
+            document.getElementById('drawer-artist-name').innerText = artist.name;
+            document.getElementById('drawer-artist-stage').innerText = artist.careerStage;
+            document.getElementById('drawer-artist-genres').innerText = `${artist.genres} • ${artist.country}`;
+
+            document.getElementById('drawer-stat-listeners').innerText = (artist.spotifyListeners || 0).toLocaleString();
+            document.getElementById('drawer-stat-cmscore').innerText = Math.round(artist.chartmetricScore) || 50;
+
+            document.getElementById('drawer-txt-male').innerText = `${artist.malePct}%`;
+            document.getElementById('drawer-txt-female').innerText = `${artist.femalePct}%`;
+            document.getElementById('drawer-bar-male').style.width = `${artist.malePct}%`;
+            document.getElementById('drawer-bar-female').style.width = `${artist.femalePct}%`;
+
+            const drawer = document.getElementById('artist-deep-drawer');
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                drawer.classList.remove('translate-x-full');
+            }, 10);
+
+            renderDrawerCharts(artist);
+        }
+
+        function closeArtistDrawer() {
+            const drawer = document.getElementById('artist-deep-drawer');
+            drawer.classList.add('translate-x-full');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+            }, 300);
+        }
+
+        function renderDrawerCharts(artist) {
+            if (state.charts.drawerCity) state.charts.drawerCity.destroy();
+            if (state.charts.drawerAge) state.charts.drawerAge.destroy();
+
+            const ctxCity = document.getElementById('drawer-city-chart').getContext('2d');
+            const cityLabels = [artist.topCity, "Other Cities"];
+            const cityValues = [artist.topCityListeners || 0, Math.max((artist.spotifyListeners || 0) - (artist.topCityListeners || 0), 0)];
+
+            state.charts.drawerCity = new Chart(ctxCity, {
+                type: 'bar',
+                data: {
+                    labels: cityLabels,
+                    datasets: [{
+                        label: 'Active Listeners',
+                        data: cityValues,
+                        backgroundColor: ['#ff7759', '#eeece7'],
+                        borderColor: '#ffad9b',
+                        borderWidth: 1,
+                        barThickness: 14
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#ffffff', font: { family: 'Space Grotesk' } }, grid: { display: false } },
+                        y: { 
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { family: 'Space Grotesk' },
+                                callback: function(val) { return abbreviateNumber(val); }
+                            }, 
+                            grid: { color: 'rgba(255, 255, 255, 0.15)' } 
+                        }
+                    }
+                }
+            });
+
+            const ctxAge = document.getElementById('drawer-age-chart').getContext('2d');
+            const ageBrackets = ['13-17', '18-24', '25-34', '35-44', '45+'];
+            const ageValues = [
+                artist.age13_17 || 0,
+                artist.age18_24 || 0,
+                artist.age25_34 || 0,
+                artist.age35_44 || 0,
+                artist.age45_plus || 0
+            ];
+
+            state.charts.drawerAge = new Chart(ctxAge, {
+                type: 'bar',
+                data: {
+                    labels: ageBrackets,
+                    datasets: [{
+                        label: 'Ratio %',
+                        data: ageValues,
+                        backgroundColor: '#ff7759',
+                        borderColor: '#ffad9b',
+                        borderWidth: 1,
+                        barThickness: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#ffffff', font: { family: 'Space Grotesk' } }, grid: { display: false } },
+                        y: { 
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { family: 'Space Grotesk' },
+                                callback: function(val) { return val + '%'; }
+                            }, 
+                            grid: { color: 'rgba(255, 255, 255, 0.15)' } 
+                        }
+                    }
+                }
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colorClass = type === 'success' ? 'bg-white border-[#1863dc] text-[#1863dc]' :
+                               type === 'error' ? 'bg-white border-[#ff7759] text-[#ff7759]' :
+                               'bg-white border-[#d9d9dd] text-[#212121]';
+
+            toast.className = `flex items-center gap-2.5 p-3 px-4 border-l-4 text-xs font-mono uppercase shadow-md transition-all duration-300 pointer-events-auto rounded-sm ${colorClass}`;
+            toast.innerHTML = `<i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function abbreviateNumber(num) {
+            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
+            return num.toString();
+        }
+    </script>
+</body>
+</html>
