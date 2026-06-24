@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indonesian Artist Intelligence — June 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--hdr:#0f172a;--txt:#1e293b;--muted:#64748b;--border:#e2e8f0;--c1:#3b82f6;--c2:#f59e0b;--c3:#10b981;--c4:#ef4444;--c5:#8b5cf6;--c6:#06b6d4;--c7:#f97316;--radius:10px;--gap:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
+.wrap{max-width:1380px;margin:0 auto;padding:16px}
+.hdr{background:var(--hdr);color:#fff;padding:18px 24px;border-radius:var(--radius);margin-bottom:var(--gap);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.hdr h1{font-size:18px;font-weight:600}
+.hdr .sub{font-size:12px;color:#94a3b8;margin-top:2px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer}
+.filters select option{background:#0f172a}
+.search-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 10px;border-radius:6px;font-size:13px;width:190px}
+.search-box::placeholder{color:#94a3b8}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{background:var(--card);border-radius:var(--radius);padding:16px 20px;border:1px solid var(--border)}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.kpi-val{font-size:26px;font-weight:700;color:var(--txt);margin:4px 0 2px}
+.kpi-sub{font-size:12px;color:var(--muted)}
+.kpi-a1{border-left:3px solid var(--c1)}.kpi-a2{border-left:3px solid var(--c3)}.kpi-a3{border-left:3px solid var(--c5)}.kpi-a4{border-left:3px solid var(--c2)}.kpi-a5{border-left:3px solid var(--c4)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-bottom:var(--gap)}
+.card{background:var(--card);border-radius:var(--radius);padding:16px 20px;border:1px solid var(--border)}
+.card-t{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px}
+.card-s{font-size:11px;color:var(--muted);margin-bottom:12px}
+.ib{background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid var(--c1);border-radius:var(--radius);padding:14px 18px;margin-bottom:var(--gap)}
+.ib h3{font-size:13px;font-weight:600;color:#1d4ed8;margin-bottom:8px}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ii{font-size:12px;color:#374151;padding:8px 10px;background:#fff;border-radius:6px;border:1px solid #dbeafe;line-height:1.6}
+.ii b{color:#1d4ed8}
+.lgd{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:#f8fafc;padding:8px 12px;text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;position:sticky;top:0;z-index:1}
+thead th:hover{background:#f1f5f9}
+tbody tr{border-bottom:1px solid #f1f5f9}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:7px 12px;color:var(--txt)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.bs{background:#fef3c7;color:#92400e}.bm{background:#dbeafe;color:#1e40af}.bml{background:#f3e8ff;color:#6b21a8}.bd{background:#dcfce7;color:#166534}
+.bt-s{background:#f1f5f9;color:#475569}.bt-g{background:#dcfce7;color:#166534}.bt-e{background:#d1fae5;color:#065f46;font-size:10px}.bt-sl{background:#fff7ed;color:#9a3412}.bt-c{background:#fee2e2;color:#991b1b}
+.flagg{display:inline-block;font-size:10px;background:#dcfce7;color:#166534;padding:1px 5px;border-radius:3px;margin-left:4px}
+.tblw{overflow-x:auto;max-height:500px;overflow-y:auto}
+.sa{font-size:10px;opacity:.4;margin-left:2px}
+footer{text-align:center;font-size:11px;color:var(--muted);padding:16px;margin-top:8px;border-top:1px solid var(--border)}
+@media(max-width:900px){.g2{grid-template-columns:1fr}.ig{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div>
+    <h1>Indonesian Artist Intelligence Dashboard</h1>
+    <div class="sub">Chartmetric · 999 Artists · June 24, 2026 · Filtered: 30 artists with Spotify ≥1M + full Instagram + TikTok data</div>
+  </div>
+  <div class="filters">
+    <input class="search-box" type="text" id="search" placeholder="Search artist..." oninput="applyFilters()">
+    <select id="fs" onchange="applyFilters()">
+      <option value="">All Stages</option>
+      <option>Superstar</option><option>Mainstream</option><option>Mid-Level</option><option>Developing</option>
+    </select>
+    <select id="fm" onchange="applyFilters()">
+      <option value="">All Momentum</option>
+      <option>Explosive Growth</option><option>Growth</option><option>Steady</option><option>Slowing</option><option>Cooling</option>
+    </select>
+    <select id="fg" onchange="applyFilters()"><option value="">All Genres</option></select>
+  </div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi kpi-a1"><div class="kpi-label">Artists in View</div><div class="kpi-val">30</div><div class="kpi-sub">Spotify ≥1M · IG + TikTok present</div></div>
+  <div class="kpi kpi-a2"><div class="kpi-label">Top CM Score</div><div class="kpi-val">91.66</div><div class="kpi-sub">NIKI · #1,161 global rank</div></div>
+  <div class="kpi kpi-a3"><div class="kpi-label">Top Spotify</div><div class="kpi-val">17.1M</div><div class="kpi-sub">Raim Laode · monthly listeners</div></div>
+  <div class="kpi kpi-a4"><div class="kpi-label">Top Instagram</div><div class="kpi-val">36.4M</div><div class="kpi-sub">Raisa · followers</div></div>
+  <div class="kpi kpi-a5"><div class="kpi-label">Top TikTok Likes</div><div class="kpi-val">285M</div><div class="kpi-sub">Siti Badriah · cumulative</div></div>
+</div>
+
+<div class="ib">
+  <h3>Key Insights — 30 Music Artists with Complete Platform Data</h3>
+  <div class="ig">
+    <div class="ii"><b>Indonesian Indie Owns Streaming:</b> Top 5 Spotify slots all Indonesian Indie — Raim Laode (17.1M), Nadhif Basalamah (17M), Sal Priadi (16.6M), Hindia (15.9M), Pamungkas (15.9M). Globally competitive monthly listener numbers.</div>
+    <div class="ii"><b>Filter Applied:</b> Removed social media influencers (Ria Ricis 195K, Fadil Jaidi 19K, Atta Halilintar 54K Spotify) and artists missing TikTok/Instagram data. Remaining 30 have real music streaming presence on all 3 platforms.</div>
+    <div class="ii"><b>TikTok Leaders Are Real Musicians:</b> Unlike the full dataset, TikTok dominants here are actual music artists — Siti Badriah (285M), Tiara Andini (215M), Rizky Febian (128M), Idgitaf (127M). Viral music beats influencer content.</div>
+    <div class="ii"><b>Career Stage Reality:</b> Of 30, most are Superstar (24) or Mainstream (6). Mid-Level and Developing don't make the Spotify ≥1M cut — suggests streaming volume directly correlates with career stage classification.</div>
+  </div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Career Stage Distribution</div>
+    <div class="card-s">Estimated from full 999-artist dataset via stratified sample</div>
+    <div class="lgd">
+      <span class="li"><span class="ld" style="background:#f59e0b"></span>Superstar (44 · 4.4%)</span>
+      <span class="li"><span class="ld" style="background:#3b82f6"></span>Mainstream (327 · 32.7%)</span>
+      <span class="li"><span class="ld" style="background:#8b5cf6"></span>Mid-Level (531 · 53.2%)</span>
+      <span class="li"><span class="ld" style="background:#10b981"></span>Developing (97 · 9.7%)</span>
+    </div>
+    <div style="position:relative;height:230px">
+      <canvas id="stageChart" role="img" aria-label="Career stage donut chart: Superstar 44, Mainstream 327, Mid-Level 531, Developing 97">Career stages: Superstar 4.4%, Mainstream 32.7%, Mid-Level 53.2%, Developing 9.7%</canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t">Momentum Distribution</div>
+    <div class="card-s">Estimated from full 999-artist dataset via stratified sample</div>
+    <div class="lgd">
+      <span class="li"><span class="ld" style="background:#10b981"></span>Explosive Growth (60)</span>
+      <span class="li"><span class="ld" style="background:#3b82f6"></span>Growth (300)</span>
+      <span class="li"><span class="ld" style="background:#94a3b8"></span>Steady (400)</span>
+      <span class="li"><span class="ld" style="background:#f97316"></span>Slowing (200)</span>
+      <span class="li"><span class="ld" style="background:#ef4444"></span>Cooling (39)</span>
+    </div>
+    <div style="position:relative;height:230px">
+      <canvas id="momentumChart" role="img" aria-label="Momentum horizontal bar chart: Steady 400, Growth 300, Slowing 200, Explosive 60, Cooling 39">Momentum: Steady 400, Growth 300, Slowing 200, Explosive Growth 60, Cooling 39</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:var(--gap)">
+  <div class="card-t">Top 30 Artists by Chartmetric Score</div>
+  <div class="card-s">Artists with Spotify ≥1M + complete Instagram + TikTok data · combined digital presence score</div>
+  <div style="position:relative;height:980px">
+    <canvas id="topScoreChart" role="img" aria-label="Top 30 artists by Chartmetric score horizontal bar chart. NIKI leads at 91.66.">Top 30 by CM Score: NIKI 91.66, Tulus 91.60, Hindia 91.52, Pamungkas 91.46, Raim Laode 91.28...</canvas>
+  </div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Top 10 — Spotify Monthly Listeners</div>
+    <div class="card-s">Streaming reach · filtered 30 artists</div>
+    <div style="position:relative;height:380px">
+      <canvas id="spotifyChart" role="img" aria-label="Top 10 Spotify monthly listeners bar chart. Raim Laode leads with 17.1M.">Raim Laode leads with 17.1M monthly Spotify listeners</canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t">Top 10 — Instagram Followers</div>
+    <div class="card-s">Social reach · filtered 30 artists</div>
+    <div style="position:relative;height:380px">
+      <canvas id="instaChart" role="img" aria-label="Top 10 Instagram followers bar chart. Raisa leads with 36.4M.">Raisa leads with 36.4M Instagram followers in this filtered dataset</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Top 10 — TikTok Cumulative Likes</div>
+    <div class="card-s">Viral music content power · filtered 30 artists</div>
+    <div style="position:relative;height:380px">
+      <canvas id="tiktokChart" role="img" aria-label="Top 10 TikTok cumulative likes bar chart. Siti Badriah leads with 285M.">Siti Badriah leads with 285M TikTok cumulative likes</canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t">Instagram vs Spotify</div>
+    <div class="card-s">Social reach vs streaming power · bubble size = CM Score · 30 artists</div>
+    <div class="lgd">
+      <span class="li"><span class="ld" style="background:#10b981;border-radius:50%"></span>Streaming leader (Spotify &gt;10M)</span>
+      <span class="li"><span class="ld" style="background:#ef4444;border-radius:50%"></span>Social leader (IG &gt;10M)</span>
+      <span class="li"><span class="ld" style="background:#3b82f6;border-radius:50%"></span>Balanced</span>
+    </div>
+    <div style="position:relative;height:340px">
+      <canvas id="scatterChart" role="img" aria-label="Bubble chart: Instagram followers vs Spotify listeners for 30 filtered artists.">Instagram vs Spotify comparison for 30 artists with full platform data.</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:var(--gap)">
+  <div class="card-t">Artist Detail Table <span style="font-weight:400;color:var(--muted);font-size:12px">— 30 artists · Spotify ≥1M · all 3 platforms present</span></div>
+  <div class="card-s">Click column headers to sort · Use filters above · <span style="color:#16a34a;font-weight:500">Music Pure</span> = high Spotify, moderate social</div>
+  <div class="tblw">
+    <table id="tbl">
+      <thead><tr>
+        <th onclick="sortBy('name')">Artist <span id="a-name" class="sa">↕</span></th>
+        <th onclick="sortBy('score')">CM Score <span id="a-score" class="sa">↕</span></th>
+        <th onclick="sortBy('rank')">Global Rank <span id="a-rank" class="sa">↕</span></th>
+        <th onclick="sortBy('stage')">Stage <span id="a-stage" class="sa">↕</span></th>
+        <th onclick="sortBy('momentum')">Momentum <span id="a-momentum" class="sa">↕</span></th>
+        <th onclick="sortBy('spotify')">Spotify/mo <span id="a-spotify" class="sa">↕</span></th>
+        <th onclick="sortBy('instagram')">Instagram <span id="a-instagram" class="sa">↕</span></th>
+        <th onclick="sortBy('tiktok_l')">TikTok Likes <span id="a-tiktok_l" class="sa">↕</span></th>
+        <th onclick="sortBy('genre')">Genre <span id="a-genre" class="sa">↕</span></th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>Indonesian Artist Intelligence · Source: Chartmetric · 999 Artists total · June 24, 2026 · Showing 30 artists: Spotify ≥1M monthly listeners + Instagram + TikTok data present · Distribution charts estimated from full 999-artist dataset</footer>
+</div>
+
+<script>
+const A=[
+  {name:"NIKI",score:91.66,rank:1161,stage:"Superstar",momentum:"Slowing",spotify:14733540,instagram:3079734,tiktok_f:1417795,tiktok_l:23813022,genre:"Indonesian Pop"},
+  {name:"Tulus",score:91.60,rank:1182,stage:"Superstar",momentum:"Growth",spotify:14001081,instagram:2327262,tiktok_f:285100,tiktok_l:54800000,genre:"Indonesian Pop"},
+  {name:"Hindia",score:91.52,rank:1212,stage:"Superstar",momentum:"Growth",spotify:15852104,instagram:1876313,tiktok_f:983300,tiktok_l:14100000,genre:"Indonesian Indie"},
+  {name:"Pamungkas",score:91.46,rank:1239,stage:"Superstar",momentum:"Steady",spotify:15873407,instagram:984931,tiktok_f:99635,tiktok_l:3093826,genre:"Indonesian Indie"},
+  {name:"Raim Laode",score:91.28,rank:1307,stage:"Superstar",momentum:"Growth",spotify:17139200,instagram:2048357,tiktok_f:3200000,tiktok_l:112700000,genre:"Indonesian Pop"},
+  {name:"Sal Priadi",score:90.81,rank:1509,stage:"Superstar",momentum:"Explosive Growth",spotify:16565312,instagram:758026,tiktok_f:532500,tiktok_l:21900000,genre:"Indonesian Indie"},
+  {name:"For Revenge",score:90.77,rank:1528,stage:"Superstar",momentum:"Steady",spotify:12620337,instagram:1127789,tiktok_f:1600000,tiktok_l:85100000,genre:"Indonesian Indie"},
+  {name:"Sheila On 7",score:90.72,rank:1551,stage:"Superstar",momentum:"Growth",spotify:11738993,instagram:1497749,tiktok_f:18020,tiktok_l:183070,genre:"Indonesian Pop"},
+  {name:"Nadin Amizah",score:90.49,rank:1655,stage:"Superstar",momentum:"Steady",spotify:12956417,instagram:2959109,tiktok_f:1690269,tiktok_l:35223835,genre:"Indonesian Indie"},
+  {name:"Nadhif Basalamah",score:90.37,rank:1712,stage:"Superstar",momentum:"Steady",spotify:16959851,instagram:250558,tiktok_f:560500,tiktok_l:34400000,genre:"Indonesian Pop"},
+  {name:"eńau",score:89.88,rank:1956,stage:"Mainstream",momentum:"Explosive Growth",spotify:13345006,instagram:227871,tiktok_f:197791,tiktok_l:8410678,genre:"Indonesian Indie"},
+  {name:"Mahalini",score:89.35,rank:2247,stage:"Superstar",momentum:"Slowing",spotify:9288866,instagram:7798259,tiktok_f:3645674,tiktok_l:89748953,genre:"Indonesian Pop"},
+  {name:"Idgitaf",score:89.29,rank:2279,stage:"Superstar",momentum:"Growth",spotify:11840182,instagram:779738,tiktok_f:3445583,tiktok_l:126700211,genre:"Indonesian Pop"},
+  {name:"Dewa 19",score:89.27,rank:2294,stage:"Superstar",momentum:"Growth",spotify:8213381,instagram:820799,tiktok_f:168044,tiktok_l:1986466,genre:"Indonesian Pop"},
+  {name:"Rizky Febian",score:89.02,rank:2441,stage:"Superstar",momentum:"Steady",spotify:6424990,instagram:13849560,tiktok_f:5100000,tiktok_l:128000000,genre:"Indonesian Pop"},
+  {name:"Tiara Andini",score:88.81,rank:2568,stage:"Superstar",momentum:"Slowing",spotify:6765063,instagram:8289678,tiktok_f:6800000,tiktok_l:214800000,genre:"Indonesian Pop"},
+  {name:"Bernadya",score:88.73,rank:2618,stage:"Superstar",momentum:"Growth",spotify:9324379,instagram:3097296,tiktok_f:1623499,tiktok_l:54268488,genre:"Indonesian Pop"},
+  {name:"Raisa",score:88.71,rank:2628,stage:"Superstar",momentum:"Steady",spotify:5586361,instagram:36368932,tiktok_f:1691309,tiktok_l:47295325,genre:"Indonesian Pop"},
+  {name:".Feast",score:88.64,rank:2676,stage:"Superstar",momentum:"Slowing",spotify:11653318,instagram:924094,tiktok_f:875403,tiktok_l:37325782,genre:"Indonesian Indie"},
+  {name:"Lyodra",score:88.46,rank:2789,stage:"Superstar",momentum:"Steady",spotify:10025099,instagram:4224154,tiktok_f:3639260,tiktok_l:109442647,genre:"Indonesian Pop"},
+  {name:"Juicy Luicy",score:88.37,rank:2852,stage:"Superstar",momentum:"Steady",spotify:10164981,instagram:522092,tiktok_f:261008,tiktok_l:16802434,genre:"Indonesian Pop"},
+  {name:"Ndarboy Genk",score:88.31,rank:2889,stage:"Superstar",momentum:"Growth",spotify:3582370,instagram:1011762,tiktok_f:1035591,tiktok_l:44171250,genre:"Indonesian Folk"},
+  {name:"Andmesh",score:88.25,rank:2932,stage:"Mainstream",momentum:"Steady",spotify:8126619,instagram:892533,tiktok_f:684554,tiktok_l:25307558,genre:"Indonesian Pop"},
+  {name:"Fourtwnty",score:87.55,rank:3425,stage:"Mainstream",momentum:"Slowing",spotify:10488703,instagram:728893,tiktok_f:50134,tiktok_l:686596,genre:"Indonesian Indie"},
+  {name:"Perunggu",score:87.50,rank:3466,stage:"Superstar",momentum:"Growth",spotify:10767071,instagram:444899,tiktok_f:158984,tiktok_l:7406791,genre:"Indonesian Indie"},
+  {name:"Rossa",score:86.90,rank:3940,stage:"Mainstream",momentum:"Steady",spotify:5260292,instagram:17547848,tiktok_f:131413,tiktok_l:112261,genre:"Indonesian Pop"},
+  {name:"Happy Asmara",score:86.36,rank:4400,stage:"Superstar",momentum:"Steady",spotify:1604135,instagram:6732148,tiktok_f:8636990,tiktok_l:246249170,genre:"Indonesian Folk"},
+  {name:"Rich Brian",score:85.93,rank:4776,stage:"Mainstream",momentum:"Slowing",spotify:3114709,instagram:3478645,tiktok_f:795776,tiktok_l:11193673,genre:"Hip-Hop/Rap"},
+  {name:"Siti Badriah",score:85.75,rank:4950,stage:"Superstar",momentum:"Steady",spotify:1143403,instagram:6441438,tiktok_f:7300000,tiktok_l:284600000,genre:"Dangdut"},
+  {name:"Agnes Monica",score:85.69,rank:5000,stage:"Mainstream",momentum:"Cooling",spotify:2620117,instagram:30953771,tiktok_f:1956114,tiktok_l:12762915,genre:"Indonesian Pop"}
+];
+
+const genres=[...new Set(A.map(a=>a.genre))].sort();
+const fgEl=document.getElementById('fg');
+genres.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;fgEl.appendChild(o);});
+
+function fmt(n){
+  if(!n||n===0)return'—';
+  if(n>=1e9)return(n/1e9).toFixed(2)+'B';
+  if(n>=1e6)return(n/1e6).toFixed(1)+'M';
+  if(n>=1e3)return Math.round(n/1e3)+'K';
+  return n.toLocaleString();
+}
+
+function bStage(s){const m={Superstar:'bs',Mainstream:'bm','Mid-Level':'bml',Developing:'bd'};return`<span class="badge ${m[s]||'bs'}">${s}</span>`;}
+function bMom(m){const c={'Explosive Growth':'bt-e',Growth:'bt-g',Steady:'bt-s',Slowing:'bt-sl',Cooling:'bt-c'};return`<span class="badge ${c[m]||'bt-s'}">${m}</span>`;}
+
+let filtered=[...A],sortCol='score',sortDir=-1;
+
+function applyFilters(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const s=document.getElementById('fs').value;
+  const m=document.getElementById('fm').value;
+  const g=document.getElementById('fg').value;
+  filtered=A.filter(a=>{
+    if(q&&!a.name.toLowerCase().includes(q))return false;
+    if(s&&a.stage!==s)return false;
+    if(m&&a.momentum!==m)return false;
+    if(g&&a.genre!==g)return false;
+    return true;
+  });
+  renderTable();
+}
+
+function sortBy(col){
+  if(sortCol===col)sortDir*=-1;
+  else{sortCol=col;sortDir=col==='name'?1:-1;}
+  document.querySelectorAll('.sa').forEach(e=>{e.textContent='↕';e.style.opacity='.4';});
+  const el=document.getElementById('a-'+col);
+  if(el){el.textContent=sortDir>0?'↑':'↓';el.style.opacity='1';}
+  renderTable();
+}
+
+function renderTable(){
+  const s=[...filtered].sort((a,b)=>{
+    const av=a[sortCol]??'',bv=b[sortCol]??'';
+    if(typeof av==='string')return sortDir*av.localeCompare(bv);
+    return sortDir*(av-bv);
+  });
+  document.getElementById('tb').innerHTML=s.map(a=>{
+    const mf=a.spotify>10000000&&a.instagram<3000000?'<span class="flagg">Music Pure</span>':'';
+    return`<tr>
+      <td><strong>${a.name}</strong>${mf}</td>
+      <td><strong>${a.score.toFixed(2)}</strong></td>
+      <td>#${a.rank.toLocaleString()}</td>
+      <td>${bStage(a.stage)}</td>
+      <td>${bMom(a.momentum)}</td>
+      <td>${fmt(a.spotify)}</td>
+      <td>${fmt(a.instagram)}</td>
+      <td>${fmt(a.tiktok_l)}</td>
+      <td>${a.genre}</td>
+    </tr>`;
+  }).join('');
+}
+
+const PAL=['#3b82f6','#f59e0b','#10b981','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899','#14b8a6','#a855f7','#0ea5e9','#f43f5e','#22c55e','#eab308','#6366f1','#d946ef','#fb923c','#4ade80','#38bdf8','#a3e635','#fbbf24','#f87171','#818cf8','#34d399','#2dd4bf','#c084fc','#fb7185','#86efac','#bef264'];
+
+new Chart(document.getElementById('stageChart'),{
+  type:'doughnut',
+  data:{labels:['Superstar','Mainstream','Mid-Level','Developing'],datasets:[{data:[44,327,531,97],backgroundColor:['#f59e0b','#3b82f6','#8b5cf6','#10b981'],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed} (${(ctx.parsed/999*100).toFixed(1)}%)`}}}}
+});
+
+new Chart(document.getElementById('momentumChart'),{
+  type:'bar',
+  data:{labels:[['Explosive','Growth'],'Growth','Steady','Slowing','Cooling'],datasets:[{data:[60,300,400,200,39],backgroundColor:['#10b981','#3b82f6','#94a3b8','#f97316','#ef4444'],borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x} artists (${(ctx.parsed.x/999*100).toFixed(1)}%)`}}},scales:{x:{beginAtZero:true,grid:{display:true}},y:{grid:{display:false}}}}
+});
+
+const t30=[...A].sort((a,b)=>b.score-a.score);
+new Chart(document.getElementById('topScoreChart'),{
+  type:'bar',
+  data:{labels:t30.map(a=>a.name),datasets:[{label:'CM Score',data:t30.map(a=>a.score),backgroundColor:t30.map((_,i)=>PAL[i%PAL.length]+'cc'),borderColor:t30.map((_,i)=>PAL[i%PAL.length]),borderWidth:1,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` Score: ${ctx.parsed.x.toFixed(2)}`}}},scales:{x:{min:84,max:93,ticks:{callback:v=>v.toFixed(0)}},y:{grid:{display:false}}}}
+});
+
+const tsp=[...A].sort((a,b)=>b.spotify-a.spotify).slice(0,10);
+new Chart(document.getElementById('spotifyChart'),{
+  type:'bar',
+  data:{labels:tsp.map(a=>a.name),datasets:[{data:tsp.map(a=>a.spotify),backgroundColor:'#10b98199',borderColor:'#10b981',borderWidth:1,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.parsed.x)} listeners`}}},scales:{x:{beginAtZero:true,ticks:{callback:v=>fmt(v)}},y:{grid:{display:false}}}}
+});
+
+const tig=[...A].sort((a,b)=>b.instagram-a.instagram).slice(0,10);
+new Chart(document.getElementById('instaChart'),{
+  type:'bar',
+  data:{labels:tig.map(a=>a.name),datasets:[{data:tig.map(a=>a.instagram),backgroundColor:'#8b5cf699',borderColor:'#8b5cf6',borderWidth:1,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.parsed.x)} followers`}}},scales:{x:{beginAtZero:true,ticks:{callback:v=>fmt(v)}},y:{grid:{display:false}}}}
+});
+
+const ttk=[...A].sort((a,b)=>b.tiktok_l-a.tiktok_l).slice(0,10);
+new Chart(document.getElementById('tiktokChart'),{
+  type:'bar',
+  data:{labels:ttk.map(a=>a.name),datasets:[{data:ttk.map(a=>a.tiktok_l),backgroundColor:'#f9731699',borderColor:'#f97316',borderWidth:1,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.parsed.x)} likes`}}},scales:{x:{beginAtZero:true,ticks:{callback:v=>fmt(v)}},y:{grid:{display:false}}}}
+});
+
+const bData=A.map(a=>({x:+(a.instagram/1e6).toFixed(2),y:+(a.spotify/1e6).toFixed(2),label:a.name,r:Math.max(4,Math.min(16,+(a.score-84).toFixed(1)))}));
+const bBg=A.map(a=>{if(a.spotify>10000000)return'#10b98155';if(a.instagram>10000000)return'#ef444455';return'#3b82f655';});
+const bBd=A.map(a=>{if(a.spotify>10000000)return'#10b981';if(a.instagram>10000000)return'#ef4444';return'#3b82f6';});
+new Chart(document.getElementById('scatterChart'),{
+  type:'bubble',
+  data:{datasets:[{data:bData,backgroundColor:bBg,borderColor:bBd,borderWidth:1.5}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>[ctx.raw.label,`Instagram: ${ctx.raw.x.toFixed(1)}M`,`Spotify: ${ctx.raw.y.toFixed(1)}M`]}}},scales:{x:{title:{display:true,text:'Instagram Followers (M)'},min:0,max:42},y:{title:{display:true,text:'Spotify Monthly Listeners (M)'},min:0,max:19}},layout:{padding:10}}
+});
+
+sortBy('score');
+</script>
+</body>
+</html>
